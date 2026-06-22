@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { SectionTitleAccent } from "@/components/ui/SectionTitleAccent";
 import { PlaceholderImage } from "@/components/ui/PlaceholderImage";
 import { GALLERY_CATEGORIES } from "@/lib/data";
 import type { CategoryGalleryData, GalleryImageItem, GalleryVideoItem } from "@/lib/gallery-media";
@@ -160,7 +161,10 @@ export function GalleryCategoriesSection({
           </div>
 
           {isDynamic && activeCategory && (
-            <h2 className="mb-6 text-xl font-bold text-white sm:text-2xl">{activeCategory.label}</h2>
+            <div className="mb-6">
+              <h2 className="text-xl font-bold text-white sm:text-2xl">{activeCategory.label}</h2>
+              <SectionTitleAccent size="sm" />
+            </div>
           )}
 
           <AnimatePresence mode="wait">

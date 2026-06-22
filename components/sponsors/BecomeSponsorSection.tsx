@@ -1,5 +1,6 @@
 "use client";
 
+import { SectionTitleAccent } from "@/components/ui/SectionTitleAccent";
 import Link from "next/link";
 import { motion } from "framer-motion";
 
@@ -27,6 +28,7 @@ export function BecomeSponsorSection() {
                 Join Our Team
               </p>
               <h2 className="mt-3 text-2xl font-bold text-white sm:text-3xl">Become a Sponsor</h2>
+              <SectionTitleAccent size="sm" />
               <p className="mt-4 text-sm leading-relaxed text-muted sm:text-base">
                 Partner with Team Manipal Racing Electric and invest in the next generation of
                 motorsport engineers. Your support fuels innovation, competition readiness, and

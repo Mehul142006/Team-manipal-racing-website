@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import type { ReactNode } from "react";
+import { SectionTitleAccent } from "@/components/ui/SectionTitleAccent";
 
 type GlassCardProps = {
   children: ReactNode;
@@ -60,7 +61,7 @@ export function SectionHeading({
       <h2 className="mt-3 text-3xl font-bold tracking-tight text-white sm:text-4xl lg:text-5xl">
         {title}
       </h2>
-      <div className={`section-title-accent ${align === "center" ? "section-title-accent-center" : ""}`} />
+      <SectionTitleAccent align={align} size="md" />
       {description && !compact && (
         <p className="mt-4 text-sm leading-relaxed text-muted sm:text-base">
           {description}
@@ -99,7 +100,7 @@ export function PageHero({
         >
           {title}
         </motion.h1>
-        <div className="section-title-accent mt-5" />
+        <SectionTitleAccent size="lg" className="mt-5" />
         {description && (
           <motion.p
             initial={{ opacity: 0, y: 20 }}

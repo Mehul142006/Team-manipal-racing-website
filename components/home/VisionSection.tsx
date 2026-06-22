@@ -2,6 +2,7 @@
 
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
+import { SectionTitleAccent } from "@/components/ui/SectionTitleAccent";
 import { VISION } from "@/lib/data";
 
 const HIGHLIGHT_WORDS = new Set([
@@ -36,6 +37,7 @@ export function VisionSection() {
           >
             Our Vision
           </motion.p>
+          <SectionTitleAccent align="center" size="md" className="mt-4" />
 
           <blockquote className="mt-10 text-center">
             <p className="text-2xl font-light leading-relaxed tracking-tight sm:text-3xl md:text-4xl lg:text-[2.75rem] lg:leading-snug">

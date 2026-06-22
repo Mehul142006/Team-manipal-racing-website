@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { motion } from "framer-motion";
+import { SectionTitleAccent } from "@/components/ui/SectionTitleAccent";
 import { AnimatedCounter } from "@/components/ui/AnimatedCounter";
 import { useInView } from "@/hooks/useInView";
 import { TEAM_STATS } from "@/lib/data";
@@ -61,7 +62,7 @@ export function AboutSection({ teamPhotoSrc }: AboutSectionProps) {
             <h2 className="mt-3 text-3xl font-bold text-white sm:text-4xl">
               Team Manipal Racing Electric
             </h2>
-            <div className="section-title-accent mt-4" />
+            <SectionTitleAccent size="md" className="mt-4" />
             <p className="mt-6 text-base leading-relaxed text-muted">
               MIT Manipal&apos;s official E-BAJA SAE electric team — student engineers designing,
               building, and racing championship off-road vehicles from the Techshila workshop.

@@ -3,6 +3,7 @@
 import { useEffect } from "react";
 import { motion } from "framer-motion";
 import { PlaceholderImage } from "@/components/ui/PlaceholderImage";
+import { SectionTitleAccent } from "@/components/ui/SectionTitleAccent";
 import type { SubsystemSlug } from "@/lib/data";
 import { getSubsystem } from "@/lib/data";
 
@@ -82,7 +83,7 @@ export function SubsystemModal({ slug, imageSrc, onClose }: SubsystemModalProps)
               {subsystem.title}
             </h2>
 
-            <div className="section-title-accent mt-5" />
+            <SectionTitleAccent size="sm" className="mt-5" />
 
             <div className="mt-7 space-y-6">
               <section>

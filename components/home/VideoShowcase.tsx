@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
+import { SectionTitleAccent } from "@/components/ui/SectionTitleAccent";
 import { SectionAtmosphere } from "@/components/ui/SectionAtmosphere";
 import { getVideoMimeType } from "@/lib/hero-media";
 
@@ -37,7 +38,7 @@ export function VideoShowcase({ videoSrc, fallbackImage }: VideoShowcaseProps) {
           <h2 className="mt-3 text-center text-3xl font-bold text-white sm:text-4xl lg:text-5xl">
             Competition in Motion
           </h2>
-          <div className="section-title-accent section-title-accent-center mt-4" />
+          <SectionTitleAccent align="center" size="lg" className="mt-4" />
 
           <div className="liquid-glass liquid-glass-card mx-auto mt-10 max-w-6xl overflow-hidden rounded-3xl ring-1 ring-white/10">
             <div className="relative aspect-video min-h-[220px] bg-midnight sm:min-h-[360px]">

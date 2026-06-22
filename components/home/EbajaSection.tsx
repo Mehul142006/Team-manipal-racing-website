@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { SectionTitleAccent } from "@/components/ui/SectionTitleAccent";
 import { HomePhotoCard } from "@/components/ui/HomePhotoCard";
 import { EBAJA_INFO } from "@/lib/data";
 
@@ -26,7 +27,7 @@ export function EbajaSection({ saeEbajaSrc }: EbajaSectionProps) {
             <h2 className="mt-3 text-3xl font-bold text-white sm:text-4xl lg:text-5xl">
               E-BAJA SAE India
             </h2>
-            <div className="section-title-accent mt-4" />
+            <SectionTitleAccent size="lg" className="mt-4" />
 
             <p className="mt-6 max-w-xl text-base leading-relaxed text-muted sm:text-lg">
               {EBAJA_INFO.intro}

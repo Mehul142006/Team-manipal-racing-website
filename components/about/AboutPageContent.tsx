@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { GlassCard, PageHero } from "@/components/ui/GlassCard";
+import { SectionTitleAccent } from "@/components/ui/SectionTitleAccent";
 import type { AboutPhotos } from "@/lib/get-about-photo";
 import { MISSION, SUBSYSTEMS, VISION } from "@/lib/data";
 
@@ -94,6 +95,7 @@ function AboutSectionBlock({ title, text, imageSrc, alt, layout, priority }: Abo
             className={textOrder}
           >
             <h2 className="text-2xl font-bold text-white sm:text-3xl">{title}</h2>
+            <SectionTitleAccent size="sm" />
             <p className="mt-4 max-w-xl text-base leading-relaxed text-muted sm:text-lg">{text}</p>
           </motion.div>
 
@@ -156,7 +158,7 @@ export function AboutPageContent({ photos }: AboutPageContentProps) {
       <section className="py-16 sm:py-24">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <h2 className="text-2xl font-bold text-white sm:text-3xl">Subsystems</h2>
-          <div className="section-title-accent mt-3 mb-8" />
+          <SectionTitleAccent size="sm" className="mb-8 mt-3" />
           <div className="flex flex-wrap gap-3">
             {SUBSYSTEMS.map((s) => (
               <Link

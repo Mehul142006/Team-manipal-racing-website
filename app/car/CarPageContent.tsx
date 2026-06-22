@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import { CarHistory } from "@/components/car/CarHistory";
 import { GlassCard, SectionHeading } from "@/components/ui/GlassCard";
+import { SectionTitleAccent } from "@/components/ui/SectionTitleAccent";
 import { PlaceholderImage } from "@/components/ui/PlaceholderImage";
 import { CAR_PAGE } from "@/lib/data";
 import type { EvPhotos, SitePhotos } from "@/lib/get-site-photos";
@@ -88,7 +89,7 @@ export function CarPageContent({ photos, evImages }: CarPageContentProps) {
               <h2 className="mt-3 text-3xl font-bold text-white sm:text-4xl">
                 {CAR_PAGE.overview.title}
               </h2>
-              <div className="section-title-accent mt-4" />
+              <SectionTitleAccent size="md" className="mt-4" />
               <div className="mt-6 space-y-4">
                 {CAR_PAGE.overview.paragraphs.map((paragraph) => (
                   <p key={paragraph.slice(0, 40)} className="text-sm leading-relaxed text-muted sm:text-base">
@@ -145,7 +146,7 @@ export function CarPageContent({ photos, evImages }: CarPageContentProps) {
               <h2 className="mt-3 text-3xl font-bold text-white sm:text-4xl">
                 {CAR_PAGE.competitionReady.title}
               </h2>
-              <div className="section-title-accent mt-4" />
+              <SectionTitleAccent size="md" className="mt-4" />
               <div className="mt-6 space-y-4">
                 {CAR_PAGE.competitionReady.paragraphs.map((paragraph) => (
                   <p key={paragraph.slice(0, 40)} className="max-w-xl text-sm leading-relaxed text-muted sm:text-base">

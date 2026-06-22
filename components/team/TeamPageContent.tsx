@@ -3,6 +3,7 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
 import { PageHero } from "@/components/ui/GlassCard";
+import { SectionTitleAccent } from "@/components/ui/SectionTitleAccent";
 import { MemberCard } from "@/components/ui/MemberCard";
 import { SectionAtmosphere } from "@/components/ui/SectionAtmosphere";
 import { LEADERSHIP, SUBSYSTEM_TEAMS, SUBSYSTEMS } from "@/lib/data";
@@ -11,7 +12,7 @@ function SectionTitle({ children }: { children: ReactNode }) {
   return (
     <div className="mb-8">
       <h2 className="text-xl font-bold text-white sm:text-2xl">{children}</h2>
-      <div className="section-title-accent mt-3" />
+      <SectionTitleAccent size="sm" className="mt-3" />
     </div>
   );
 }

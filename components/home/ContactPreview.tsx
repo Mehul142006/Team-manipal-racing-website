@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { motion } from "framer-motion";
+import { SectionTitleAccent } from "@/components/ui/SectionTitleAccent";
 import { TeamLogo } from "@/components/ui/TeamLogo";
 import { SocialLinks } from "@/components/ui/SocialLinks";
 import { SITE } from "@/lib/data";
@@ -24,6 +25,7 @@ export function ContactPreview() {
               <h2 className="mt-3 text-2xl font-bold text-white sm:text-3xl">
                 Partner With TMRE
               </h2>
+              <SectionTitleAccent size="sm" />
               <p className="mt-4 text-sm leading-relaxed text-muted sm:text-base">
                 Interested in sponsorship, recruitment, or collaboration? Connect with{" "}
                 {SITE.name} at MIT Manipal.
