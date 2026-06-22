@@ -3,14 +3,12 @@ import { AboutSection } from "@/components/home/AboutSection";
 import { EbajaSection } from "@/components/home/EbajaSection";
 import { VisionSection } from "@/components/home/VisionSection";
 import { SubsystemsPreview } from "@/components/home/SubsystemsPreview";
-import { EVJourneySection } from "@/components/home/EVJourneySection";
 import { AchievementsPreview } from "@/components/home/AchievementsPreview";
 import { SponsorsPreview } from "@/components/home/SponsorsPreview";
 import { GalleryPreview } from "@/components/home/GalleryPreview";
 import { FollowOurJourney } from "@/components/home/FollowOurJourney";
 import { ContactPreview } from "@/components/home/ContactPreview";
 import { getHomeGalleryPreviewItems, getHomePhotos } from "@/lib/get-home-photos";
-import { verifyEvPhotos } from "@/lib/get-site-photos";
 import { verifySubsystemPhotos } from "@/lib/get-subsystem-photos";
 import { getSponsors } from "@/lib/get-sponsors";
 
@@ -18,7 +16,6 @@ export default function HomePage() {
   const sponsors = getSponsors();
   const { teamPhoto, saeEbaja, nationalPodiums } = getHomePhotos();
   const galleryItems = getHomeGalleryPreviewItems();
-  const evImages = verifyEvPhotos();
   const subsystemPhotos = verifySubsystemPhotos();
 
   if (!teamPhoto) {
@@ -40,7 +37,6 @@ export default function HomePage() {
       <EbajaSection saeEbajaSrc={saeEbaja} />
       <VisionSection />
       <SubsystemsPreview subsystemPhotos={subsystemPhotos} />
-      <EVJourneySection evImages={evImages} />
       <AchievementsPreview podiumImageSrc={nationalPodiums} />
       <SponsorsPreview sponsors={sponsors} />
       <GalleryPreview items={galleryItems} />

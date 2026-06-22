@@ -11,11 +11,11 @@ import type { EvPhotoId, EvPhotos } from "@/lib/get-site-photos";
 const ease = [0.22, 1, 0.36, 1] as const;
 const LAST_INDEX = EV_EVOLUTION.length - 1;
 
-type EVJourneySectionProps = {
+type CarHistoryProps = {
   evImages: EvPhotos;
 };
 
-export function EVJourneySection({ evImages }: EVJourneySectionProps) {
+export function CarHistory({ evImages }: CarHistoryProps) {
   const [selected, setSelected] = useState(LAST_INDEX);
   const { ref, inView } = useInView<HTMLElement>();
   const vehicle = EV_EVOLUTION[selected];

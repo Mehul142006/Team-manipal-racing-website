@@ -1,15 +1,17 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { CarHistory } from "@/components/car/CarHistory";
 import { GlassCard, SectionHeading } from "@/components/ui/GlassCard";
 import { PlaceholderImage } from "@/components/ui/PlaceholderImage";
 import { CAR_PAGE } from "@/lib/data";
-import type { SitePhotos } from "@/lib/get-site-photos";
+import type { EvPhotos, SitePhotos } from "@/lib/get-site-photos";
 
 const ease = [0.22, 1, 0.36, 1] as const;
 
 type CarPageContentProps = {
   photos: SitePhotos;
+  evImages: EvPhotos;
 };
 
 function VehicleShowcaseImage({ src, alt }: { src: string; alt: string }) {
@@ -26,7 +28,7 @@ function VehicleShowcaseImage({ src, alt }: { src: string; alt: string }) {
   );
 }
 
-export function CarPageContent({ photos }: CarPageContentProps) {
+export function CarPageContent({ photos, evImages }: CarPageContentProps) {
   return (
     <>
       <section className="relative flex min-h-[80vh] items-end overflow-hidden pt-32 pb-16 sm:min-h-[85vh] sm:pb-20">
@@ -168,6 +170,8 @@ export function CarPageContent({ photos }: CarPageContentProps) {
           </div>
         </div>
       </section>
+
+      <CarHistory evImages={evImages} />
     </>
   );
 }
