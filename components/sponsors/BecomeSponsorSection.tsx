@@ -49,26 +49,27 @@ export function BecomeSponsorSection() {
                 Partner With TMRE
               </Link>
             </div>
-            <div className="flex flex-col items-center justify-center border-t border-white/5 bg-steel/10 p-8 lg:border-l lg:border-t-0 lg:p-16">
-              <div className="flex h-20 w-20 items-center justify-center rounded-2xl border border-white/10 liquid-glass">
-                <svg
-                  viewBox="0 0 24 24"
-                  aria-hidden="true"
-                  className="h-10 w-10 text-orange"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="1.5"
-                >
-                  <path d="M12 2L2 7l10 5 10-5-10-5z" />
-                  <path d="M2 17l10 5 10-5" />
-                  <path d="M2 12l10 5 10-5" />
-                </svg>
+
+            <div className="flex flex-col border-t border-white/5 bg-steel/10 p-8 sm:p-10 lg:border-l lg:border-t-0 lg:p-12">
+              <div className="sponsor-focus-image group overflow-hidden rounded-2xl border border-white/10">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src="/sponsors/sponsor-placeholder.jpg"
+                  alt="Team Manipal Racing Electric partnership"
+                  loading="lazy"
+                  decoding="async"
+                  className="aspect-[3/2] w-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
+                />
               </div>
-              <p className="mt-6 text-center text-sm font-semibold text-white">
+
+              <h3 className="mt-8 text-xl font-bold text-white sm:text-2xl">
                 Fuel Student Innovation
-              </p>
-              <p className="mt-2 max-w-xs text-center text-xs leading-relaxed text-muted">
-                Join industry leaders supporting TMRE at E-BAJA and beyond.
+              </h3>
+              <SectionTitleAccent size="sm" className="mt-3" />
+              <p className="mt-4 text-sm leading-relaxed text-muted sm:text-base">
+                Support the next generation of engineers by partnering with Team Manipal Racing
+                Electric and enabling innovation in electric mobility, sustainability, and competitive
+                engineering.
               </p>
             </div>
           </div>

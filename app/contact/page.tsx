@@ -1,6 +1,6 @@
 "use client";
 
-import { PageHero } from "@/components/ui/GlassCard";
+import { ContactHero } from "@/components/contact/ContactHero";
 import { ContactForm } from "@/components/ui/ContactForm";
 import { RecruitmentSection } from "@/components/contact/RecruitmentSection";
 import { GoogleMapsLink } from "@/components/ui/GoogleMapsLink";
@@ -11,11 +11,7 @@ import { SITE } from "@/lib/data";
 export default function ContactPage() {
   return (
     <>
-      <PageHero
-        eyebrow="Get In Touch"
-        title="Contact Us"
-        description="Reach out for sponsorship, recruitment, media inquiries, or collaboration with Team Manipal Racing Electric at MIT Manipal."
-      />
+      <ContactHero />
 
       <section className="pb-24 sm:pb-32">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
