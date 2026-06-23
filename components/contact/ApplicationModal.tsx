@@ -9,6 +9,7 @@ import {
   validateApplicationForm,
   type RecruitmentSubsystem,
 } from "@/lib/recruitment";
+import { ModalPortal } from "@/components/ui/ModalPortal";
 import { assertSupabaseConfigured, supabase } from "@/lib/supabase";
 
 type ApplicationModalProps = {
@@ -103,16 +104,17 @@ export function ApplicationModal({ open, onClose }: ApplicationModalProps) {
   }
 
   return (
-    <AnimatePresence>
-      {open && (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 0.25 }}
-          className="fixed inset-0 z-[100] flex items-center justify-center bg-black/75 p-4 backdrop-blur-xl sm:p-6 clickable"
-          onClick={handleClose}
-        >
+    <ModalPortal>
+      <AnimatePresence>
+        {open && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.25 }}
+            className="fixed inset-0 z-[120] flex items-center justify-center bg-black/75 p-4 backdrop-blur-xl sm:p-6 clickable"
+            onClick={handleClose}
+          >
           <motion.div
             initial={{ opacity: 0, y: 24, scale: 0.96 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -271,7 +273,8 @@ export function ApplicationModal({ open, onClose }: ApplicationModalProps) {
             )}
           </motion.div>
         </motion.div>
-      )}
-    </AnimatePresence>
+        )}
+      </AnimatePresence>
+    </ModalPortal>
   );
 }

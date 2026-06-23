@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { PlaceholderImage } from "@/components/ui/PlaceholderImage";
+import { ModalPortal } from "@/components/ui/ModalPortal";
 import type { GalleryImageItem, GalleryVideoItem } from "@/lib/gallery-media";
 
 type PlaceholderLightboxItem = {
@@ -87,13 +88,14 @@ export function GalleryLightbox({ state, onClose, onChangeIndex }: GalleryLightb
   if (!item) return null;
 
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      className="fixed inset-0 z-[100] flex items-center justify-center bg-midnight/95 p-4 backdrop-blur-xl clickable"
-      onClick={onClose}
-    >
+    <ModalPortal>
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        className="fixed inset-0 z-[120] flex items-center justify-center bg-midnight/95 p-4 backdrop-blur-xl clickable"
+        onClick={onClose}
+      >
       {hasMultiple && (
         <>
           <button
@@ -199,5 +201,6 @@ export function GalleryLightbox({ state, onClose, onChangeIndex }: GalleryLightb
         </div>
       </motion.div>
     </motion.div>
+    </ModalPortal>
   );
 }

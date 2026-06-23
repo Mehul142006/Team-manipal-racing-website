@@ -81,7 +81,9 @@ export function Navbar() {
     <header className="site-navbar fixed inset-x-0 top-0 z-[80] px-3 pt-3 sm:px-4">
       <div
         className={`site-navbar-shell mx-auto max-w-7xl transition-all duration-500 ${
-          scrolled ? "liquid-glass-nav liquid-glass-nav-floating shadow-md shadow-black/40" : ""
+          scrolled || menuOpen
+            ? "liquid-glass-nav liquid-glass-nav-floating shadow-md shadow-black/40"
+            : ""
         }`}
       >
         <div className="flex items-center justify-between px-3 py-3 sm:px-5 sm:py-3.5 lg:px-6">
@@ -116,7 +118,7 @@ export function Navbar() {
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: "auto" }}
               exit={{ opacity: 0, height: 0 }}
-              className="overflow-hidden border-t border-white/5 lg:hidden"
+              className="mobile-nav-panel overflow-hidden border-t border-white/8 bg-[rgba(8,12,18,0.96)] backdrop-blur-xl lg:hidden"
             >
               <nav className="flex flex-col gap-1 px-3 py-3 sm:px-4 sm:py-4">
                 {NAV_LINKS.map((link, index) => (

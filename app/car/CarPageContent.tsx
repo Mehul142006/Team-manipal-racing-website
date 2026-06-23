@@ -79,14 +79,15 @@ export function CarPageContent({ photos, evImages }: CarPageContentProps) {
           <div className="grid items-center gap-12 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:gap-16 xl:gap-20">
             <motion.div
               initial={{ opacity: 0, x: -24 }}
-              whileInView={{ opacity: 1, y: 0 }}
+              whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.65, ease }}
+              className="min-w-0 overflow-visible"
             >
               <p className="text-xs font-semibold uppercase tracking-[0.35em] text-accent">
                 The Platform
               </p>
-              <h2 className="mt-3 text-3xl font-bold text-white sm:text-4xl">
+              <h2 className="car-section-heading mt-3 text-3xl font-bold text-white sm:text-4xl">
                 {CAR_PAGE.overview.title}
               </h2>
               <SectionTitleAccent size="md" className="mt-4" />
@@ -136,14 +137,15 @@ export function CarPageContent({ photos, evImages }: CarPageContentProps) {
           <div className="grid items-center gap-12 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:gap-16 xl:gap-20">
             <motion.div
               initial={{ opacity: 0, x: -24 }}
-              whileInView={{ opacity: 1, y: 0 }}
+              whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.65, ease }}
+              className="min-w-0 overflow-visible"
             >
               <p className="text-xs font-semibold uppercase tracking-[0.35em] text-accent">
                 Built to Compete
               </p>
-              <h2 className="mt-3 text-3xl font-bold text-white sm:text-4xl">
+              <h2 className="car-section-heading mt-3 text-3xl font-bold text-white sm:text-4xl">
                 {CAR_PAGE.competitionReady.title}
               </h2>
               <SectionTitleAccent size="md" className="mt-4" />

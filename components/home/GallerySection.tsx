@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { SectionHeading } from "@/components/ui/GlassCard";
+import { ModalPortal } from "@/components/ui/ModalPortal";
 import { GALLERY_ITEMS } from "./data";
 
 export function GallerySection() {
@@ -55,15 +56,16 @@ export function GallerySection() {
       </div>
 
       {/* Lightbox */}
-      <AnimatePresence>
-        {lightbox !== null && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[100] flex items-center justify-center bg-black/90 p-4 backdrop-blur-xl clickable"
-            onClick={() => setLightbox(null)}
-          >
+      <ModalPortal>
+        <AnimatePresence>
+          {lightbox !== null && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 z-[120] flex items-center justify-center bg-black/90 p-4 backdrop-blur-xl clickable"
+              onClick={() => setLightbox(null)}
+            >
             <motion.div
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
@@ -121,7 +123,8 @@ export function GallerySection() {
             </motion.div>
           </motion.div>
         )}
-      </AnimatePresence>
+        </AnimatePresence>
+      </ModalPortal>
     </section>
   );
 }
