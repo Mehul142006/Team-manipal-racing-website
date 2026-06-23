@@ -7,6 +7,8 @@ import { PlaceholderImage } from "@/components/ui/PlaceholderImage";
 import { GALLERY_CATEGORIES } from "@/lib/data";
 import type { CategoryGalleryData, GalleryImageItem, GalleryVideoItem } from "@/lib/gallery-media";
 import { getGalleryPlaceholders, type GalleryCategoryId } from "@/lib/images";
+import { buildCombinedGalleryItems } from "@/lib/gallery-lightbox-items";
+import { useMobileGalleryViewport } from "@/hooks/useMobileGalleryViewport";
 import { GalleryLightbox, type GalleryLightboxItem, type GalleryLightboxState } from "@/components/gallery/GalleryLightbox";
 
 type GalleryCategoriesSectionProps = {
@@ -105,6 +107,7 @@ export function GalleryCategoriesSection({
 }: GalleryCategoriesSectionProps) {
   const [active, setActive] = useState<GalleryCategoryId>("manufacturing");
   const [lightbox, setLightbox] = useState<GalleryLightboxState | null>(null);
+  const isMobileGallery = useMobileGalleryViewport();
   const placeholderItems = getGalleryPlaceholders(active, 9);
   const activeMedia = getActiveMedia(
     active,
@@ -125,13 +128,29 @@ export function GalleryCategoriesSection({
     setLightbox({ items, index: Math.max(0, index) });
   };
 
+  const includeVideos = active === "testing" || active === "competition";
+
   const openImage = (item: GalleryImageItem, allImages: GalleryImageItem[]) => {
+    if (isMobileGallery && activeMedia) {
+      const items = buildCombinedGalleryItems(activeMedia, includeVideos);
+      const index = items.findIndex((entry) => entry.kind === "image" && entry.id === item.id);
+      setLightbox({ items, index: Math.max(0, index) });
+      return;
+    }
+
     const items: GalleryLightboxItem[] = allImages.map((entry) => ({ ...entry, kind: "image" as const }));
     const index = allImages.findIndex((entry) => entry.id === item.id);
     setLightbox({ items, index: Math.max(0, index) });
   };
 
   const openVideo = (item: GalleryVideoItem, allVideos: GalleryVideoItem[]) => {
+    if (isMobileGallery && activeMedia) {
+      const items = buildCombinedGalleryItems(activeMedia, includeVideos);
+      const index = items.findIndex((entry) => entry.kind === "video" && entry.id === item.id);
+      setLightbox({ items, index: Math.max(0, index) });
+      return;
+    }
+
     const items: GalleryLightboxItem[] = allVideos.map((entry) => ({ ...entry, kind: "video" as const }));
     const index = allVideos.findIndex((entry) => entry.id === item.id);
     setLightbox({ items, index: Math.max(0, index) });
@@ -180,7 +199,7 @@ export function GalleryCategoriesSection({
                 activeMedia.stats.photos + activeMedia.stats.videos > 0 ? (
                   <DynamicGalleryGrid
                     media={activeMedia}
-                    includeVideos={active === "testing" || active === "competition"}
+                    includeVideos={includeVideos}
                     onOpenImage={openImage}
                     onOpenVideo={openVideo}
                   />

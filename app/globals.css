@@ -1183,6 +1183,18 @@ textarea:disabled,
     max-height: min(86dvh, calc(100dvh - 2rem));
     width: min(94vw, 42rem);
   }
+
+  .mobile-gallery-lightbox {
+    overscroll-behavior: none;
+  }
+
+  .mobile-gallery-toolbar {
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0.72) 0%, rgba(0, 0, 0, 0.2) 100%);
+  }
+
+  .mobile-gallery-pinch {
+    touch-action: pan-x pinch-zoom;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
