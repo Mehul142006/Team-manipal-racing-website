@@ -25,8 +25,14 @@ export function CarHistory({ evImages }: CarHistoryProps) {
     setSelected(Math.max(0, Math.min(LAST_INDEX, index)));
   }, []);
 
-  const goPrev = useCallback(() => goTo(selected - 1), [goTo, selected]);
-  const goNext = useCallback(() => goTo(selected + 1), [goTo, selected]);
+  const goPrev = useCallback(
+    () => goTo((selected - 1 + EV_EVOLUTION.length) % EV_EVOLUTION.length),
+    [goTo, selected],
+  );
+  const goNext = useCallback(
+    () => goTo((selected + 1) % EV_EVOLUTION.length),
+    [goTo, selected],
+  );
 
   useEffect(() => {
     if (!inView) return;
@@ -65,7 +71,6 @@ export function CarHistory({ evImages }: CarHistoryProps) {
           <button
             type="button"
             onClick={goPrev}
-            disabled={selected === 0}
             aria-label="Previous vehicle"
             className="ev-journey-nav-btn shrink-0"
           >
@@ -96,7 +101,6 @@ export function CarHistory({ evImages }: CarHistoryProps) {
           <button
             type="button"
             onClick={goNext}
-            disabled={selected === LAST_INDEX}
             aria-label="Next vehicle"
             className="ev-journey-nav-btn shrink-0"
           >
