@@ -1,5 +1,4 @@
 import { ContactHero } from "@/components/contact/ContactHero";
-import { ContactForm } from "@/components/ui/ContactForm";
 import { RecruitmentSection } from "@/components/contact/RecruitmentSection";
 import { GoogleMapsLink } from "@/components/ui/GoogleMapsLink";
 import { SocialLinks } from "@/components/ui/SocialLinks";
@@ -17,9 +16,8 @@ export default function ContactPage() {
 
       <section className="pb-24 sm:pb-32">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="grid gap-6 lg:grid-cols-3">
-            {/* Team information */}
-            <div className="liquid-glass rounded-3xl p-8 sm:p-10 lg:col-span-1">
+          <div className="grid gap-6 lg:grid-cols-2 lg:gap-8">
+            <div className="liquid-glass rounded-3xl p-8 sm:p-10">
               <TeamLogo variant="footer" />
               <h3 className="mt-6 text-xl font-bold text-white">{SITE.name}</h3>
               <p className="mt-2 text-sm text-muted">Manipal Institute of Technology</p>
@@ -35,9 +33,8 @@ export default function ContactPage() {
               </div>
             </div>
 
-            {/* Contact + Captain */}
-            <div className="flex flex-col gap-6 lg:col-span-1">
-              <div className="liquid-glass flex-1 rounded-3xl p-8">
+            <div className="flex flex-col gap-6">
+              <div className="liquid-glass rounded-3xl p-8 sm:p-10">
                 <p className="text-xs font-semibold uppercase tracking-widest text-accent">Contact</p>
                 <a
                   href={`mailto:${SITE.email}`}
@@ -48,8 +45,9 @@ export default function ContactPage() {
                 <p className="mt-6 text-xs text-muted">
                   For general inquiries, sponsorship, and team information.
                 </p>
-              </div>
-              <div className="liquid-glass flex-1 rounded-3xl p-8">
+
+                <div className="my-8 h-px bg-white/10" />
+
                 <p className="text-xs font-semibold uppercase tracking-widest text-accent">Team Captain</p>
                 <p className="mt-4 text-lg font-semibold text-white">{SITE.captain.name}</p>
                 <a
@@ -59,17 +57,13 @@ export default function ContactPage() {
                   {SITE.captain.phone}
                 </a>
               </div>
-            </div>
 
-            {/* Social + Form */}
-            <div className="liquid-glass rounded-3xl p-8 sm:p-10 lg:col-span-1">
-              <p className="text-xs font-semibold uppercase tracking-widest text-accent">Social Media</p>
-              <SocialLinks className="mt-4" />
-              <div className="my-8 h-px bg-white/10" />
-              <h3 className="text-lg font-bold text-white">Send a Message</h3>
-              <p className="mt-2 text-sm text-muted">We&apos;ll respond as soon as possible.</p>
-              <div className="mt-6">
-                <ContactForm />
+              <div className="liquid-glass rounded-3xl p-8 sm:p-10">
+                <p className="text-xs font-semibold uppercase tracking-widest text-accent">Social Media</p>
+                <p className="mt-3 text-sm text-muted">
+                  Follow Team Manipal Racing Electric for competition updates, build progress, and team news.
+                </p>
+                <SocialLinks className="mt-5" />
               </div>
             </div>
           </div>

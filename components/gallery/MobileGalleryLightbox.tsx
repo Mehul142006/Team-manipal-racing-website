@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion, type PanInfo } from "framer-motion";
 import { PlaceholderImage } from "@/components/ui/PlaceholderImage";
 import { ModalPortal } from "@/components/ui/ModalPortal";
+import { GalleryCloseButton } from "@/components/gallery/GalleryCloseButton";
 import type { GalleryLightboxItem, GalleryLightboxState } from "@/components/gallery/GalleryLightbox";
 
 type MobileGalleryLightboxProps = {
@@ -198,8 +199,13 @@ export function MobileGalleryLightbox({ state, onClose, onChangeIndex }: MobileG
         className="mobile-gallery-lightbox fixed inset-0 z-[120] flex flex-col bg-black touch-none"
         onClick={onClose}
       >
+        <GalleryCloseButton
+          onClose={onClose}
+          className="right-[max(1rem,env(safe-area-inset-right))] top-[max(1rem,env(safe-area-inset-top))]"
+        />
+
         <div
-          className="mobile-gallery-toolbar relative z-20 flex shrink-0 items-center justify-between px-4 pb-3 pt-[max(0.85rem,env(safe-area-inset-top))]"
+          className="mobile-gallery-toolbar relative z-20 flex shrink-0 items-center px-4 pb-3 pt-[max(3.75rem,calc(env(safe-area-inset-top)+3rem))]"
           onClick={(event) => event.stopPropagation()}
         >
           <p className="font-mono text-xs tracking-[0.18em] text-white/55">
@@ -207,14 +213,6 @@ export function MobileGalleryLightbox({ state, onClose, onChangeIndex }: MobileG
             <span className="text-white/35"> / </span>
             {items.length}
           </p>
-          <button
-            type="button"
-            aria-label="Close gallery"
-            className="flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-white/5 text-lg text-white backdrop-blur-sm transition-colors hover:border-orange/35 hover:text-accent"
-            onClick={onClose}
-          >
-            ✕
-          </button>
         </div>
 
         <div className="relative min-h-0 flex-1 overflow-hidden" onClick={(event) => event.stopPropagation()}>

@@ -5,6 +5,7 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import { PlaceholderImage } from "@/components/ui/PlaceholderImage";
 import { ModalPortal } from "@/components/ui/ModalPortal";
+import { GalleryCloseButton } from "@/components/gallery/GalleryCloseButton";
 import type { GalleryLightboxState } from "@/components/gallery/GalleryLightbox";
 
 type DesktopGalleryLightboxProps = {
@@ -79,6 +80,11 @@ export function DesktopGalleryLightbox({ state, onClose, onChangeIndex }: Deskto
         className="fixed inset-0 z-[120] flex items-center justify-center bg-midnight/95 p-4 backdrop-blur-xl clickable"
         onClick={onClose}
       >
+        <GalleryCloseButton
+          onClose={onClose}
+          className="right-[max(1rem,env(safe-area-inset-right))] top-[max(1rem,env(safe-area-inset-top))]"
+        />
+
         {hasMultiple && (
           <>
             <button
@@ -153,16 +159,16 @@ export function DesktopGalleryLightbox({ state, onClose, onChangeIndex }: Deskto
             </div>
           )}
 
-          <div className="flex flex-wrap items-center justify-between gap-3 border-t border-orange/15 px-6 py-4">
-            <div>
-              {item.kind === "placeholder" && (
-                <p className="text-sm font-semibold text-white">{item.title}</p>
-              )}
-              {item.kind === "video" && (
-                <p className="text-xs text-muted">Press space to play or pause</p>
-              )}
-            </div>
-            <div className="flex items-center gap-2">
+          {(item.kind === "placeholder" || item.kind === "video") && (
+            <div className="flex flex-wrap items-center justify-between gap-3 border-t border-orange/15 px-6 py-4">
+              <div>
+                {item.kind === "placeholder" && (
+                  <p className="text-sm font-semibold text-white">{item.title}</p>
+                )}
+                {item.kind === "video" && (
+                  <p className="text-xs text-muted">Press space to play or pause</p>
+                )}
+              </div>
               {item.kind === "video" && (
                 <button
                   type="button"
@@ -172,16 +178,8 @@ export function DesktopGalleryLightbox({ state, onClose, onChangeIndex }: Deskto
                   {isPlaying ? "Pause" : "Play"}
                 </button>
               )}
-              <button
-                type="button"
-                aria-label="Close lightbox"
-                className="flex h-9 w-9 items-center justify-center rounded-full liquid-glass text-white transition-colors hover:bg-white/10"
-                onClick={onClose}
-              >
-                ✕
-              </button>
             </div>
-          </div>
+          )}
         </motion.div>
       </motion.div>
     </ModalPortal>
