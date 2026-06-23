@@ -11,7 +11,11 @@ const SPONSOR_BENEFITS = [
   "Opportunity to support student innovation",
 ] as const;
 
-export function BecomeSponsorSection() {
+type BecomeSponsorSectionProps = {
+  imageSrc: string;
+};
+
+export function BecomeSponsorSection({ imageSrc }: BecomeSponsorSectionProps) {
   return (
     <section className="pb-24 sm:pb-32">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -54,7 +58,7 @@ export function BecomeSponsorSection() {
               <div className="sponsor-focus-image group overflow-hidden rounded-2xl border border-white/10">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
-                  src="/sponsors/sponsor-placeholder.jpg"
+                  src={imageSrc}
                   alt="Team Manipal Racing Electric partnership"
                   loading="lazy"
                   decoding="async"

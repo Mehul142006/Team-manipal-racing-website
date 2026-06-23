@@ -4,9 +4,9 @@ export const RECRUITMENT_SUBSYSTEMS = [
   "Vehicle Dynamics",
   "Electronics",
   "Data Acquisition",
-  "Powertrain",
-  "Business",
-  "Operations",
+  "Electric Powertrain",
+  "Research & Development",
+  "Management",
 ] as const;
 
 export type RecruitmentSubsystem = (typeof RECRUITMENT_SUBSYSTEMS)[number];

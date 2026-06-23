@@ -1,10 +1,12 @@
 import { PageHero } from "@/components/ui/GlassCard";
 import { BecomeSponsorSection } from "@/components/sponsors/BecomeSponsorSection";
 import { SponsorsShowcase } from "@/components/sponsors/SponsorsShowcase";
+import { getBecomeSponsorImageUrl } from "@/lib/get-become-sponsor-image";
 import { getSponsorsByTier } from "@/lib/get-sponsors";
 
 export default function SponsorsPage() {
   const sponsorsByTier = getSponsorsByTier();
+  const becomeSponsorImageSrc = getBecomeSponsorImageUrl();
 
   return (
     <>
@@ -16,7 +18,7 @@ export default function SponsorsPage() {
 
       <SponsorsShowcase sponsorsByTier={sponsorsByTier} />
 
-      <BecomeSponsorSection />
+      <BecomeSponsorSection imageSrc={becomeSponsorImageSrc} />
     </>
   );
 }

@@ -15,12 +15,6 @@ const PLACEHOLDERS = [
     height: 720,
     label: "Recruitment",
   },
-  {
-    file: "public/sponsors/sponsor-placeholder.jpg",
-    width: 960,
-    height: 640,
-    label: "Sponsor Partnership",
-  },
 ];
 
 function drawPlaceholder({ width, height, label }) {
