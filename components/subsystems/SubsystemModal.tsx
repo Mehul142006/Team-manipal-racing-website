@@ -40,7 +40,7 @@ export function SubsystemModal({ slug, imageSrc, onClose }: SubsystemModalProps)
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.25 }}
-      className="fixed inset-0 z-[100] flex items-center justify-center bg-black/75 p-3 backdrop-blur-xl sm:p-5"
+      className="fixed inset-0 z-[100] flex items-center justify-center bg-black/75 p-3 backdrop-blur-xl sm:p-5 clickable"
       onClick={onClose}
     >
       <motion.div

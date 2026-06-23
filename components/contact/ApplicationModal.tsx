@@ -110,7 +110,7 @@ export function ApplicationModal({ open, onClose }: ApplicationModalProps) {
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.25 }}
-          className="fixed inset-0 z-[100] flex items-center justify-center bg-black/75 p-4 backdrop-blur-xl sm:p-6"
+          className="fixed inset-0 z-[100] flex items-center justify-center bg-black/75 p-4 backdrop-blur-xl sm:p-6 clickable"
           onClick={handleClose}
         >
           <motion.div
