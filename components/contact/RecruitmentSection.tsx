@@ -4,7 +4,11 @@ import { useState } from "react";
 import { SectionHeading } from "@/components/ui/GlassCard";
 import { ApplicationModal } from "@/components/contact/ApplicationModal";
 
-export function RecruitmentSection() {
+type RecruitmentSectionProps = {
+  recruitmentImageSrc: string;
+};
+
+export function RecruitmentSection({ recruitmentImageSrc }: RecruitmentSectionProps) {
   const [modalOpen, setModalOpen] = useState(false);
 
   return (
@@ -39,11 +43,11 @@ export function RecruitmentSection() {
           <div className="recruitment-image-frame group overflow-hidden rounded-3xl border border-white/10">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src="/contact/recruitment-placeholder.jpg"
+              src={recruitmentImageSrc}
               alt="Team Manipal Racing Electric recruitment"
               loading="lazy"
               decoding="async"
-              className="aspect-[4/3] w-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
+              className="aspect-[4/3] w-full bg-black/30 object-contain object-center transition-transform duration-700 group-hover:scale-[1.02]"
             />
           </div>
         </div>

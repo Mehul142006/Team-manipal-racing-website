@@ -1,5 +1,3 @@
-"use client";
-
 import { ContactHero } from "@/components/contact/ContactHero";
 import { ContactForm } from "@/components/ui/ContactForm";
 import { RecruitmentSection } from "@/components/contact/RecruitmentSection";
@@ -7,11 +5,15 @@ import { GoogleMapsLink } from "@/components/ui/GoogleMapsLink";
 import { SocialLinks } from "@/components/ui/SocialLinks";
 import { TeamLogo } from "@/components/ui/TeamLogo";
 import { SITE } from "@/lib/data";
+import { getContactHeroImageUrl, getRecruitmentImageUrl } from "@/lib/get-contact-images";
 
 export default function ContactPage() {
+  const heroImageSrc = getContactHeroImageUrl();
+  const recruitmentImageSrc = getRecruitmentImageUrl();
+
   return (
     <>
-      <ContactHero />
+      <ContactHero heroImageSrc={heroImageSrc} />
 
       <section className="pb-24 sm:pb-32">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -72,7 +74,7 @@ export default function ContactPage() {
             </div>
           </div>
 
-          <RecruitmentSection />
+          <RecruitmentSection recruitmentImageSrc={recruitmentImageSrc} />
         </div>
       </section>
     </>

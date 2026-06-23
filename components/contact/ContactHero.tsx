@@ -3,15 +3,19 @@
 import { motion } from "framer-motion";
 import { SectionTitleAccent } from "@/components/ui/SectionTitleAccent";
 
-export function ContactHero() {
+type ContactHeroProps = {
+  heroImageSrc: string;
+};
+
+export function ContactHero({ heroImageSrc }: ContactHeroProps) {
   return (
     <section className="contact-hero relative overflow-hidden">
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
-        src="/contact/contact-hero-placeholder.jpg"
+        src={heroImageSrc}
         alt=""
         aria-hidden
-        className="absolute inset-0 h-full w-full object-cover"
+        className="absolute inset-0 h-full w-full object-cover object-center"
       />
       <div className="contact-hero-overlay absolute inset-0" aria-hidden />
 
