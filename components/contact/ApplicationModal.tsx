@@ -5,6 +5,9 @@ import { AnimatePresence, motion } from "framer-motion";
 import {
   EMPTY_APPLICATION_FORM,
   RECRUITMENT_SUBSYSTEMS,
+  WHATSAPP_VALIDATION_MESSAGE,
+  isValidWhatsAppNumber,
+  sanitizeWhatsAppNumber,
   toApplicationInsert,
   validateApplicationForm,
   type RecruitmentSubsystem,
@@ -62,6 +65,28 @@ export function ApplicationModal({ open, onClose }: ApplicationModalProps) {
     setValidationError("");
     setSubmitError("");
   }
+
+  function handleWhatsAppChange(rawValue: string) {
+    updateField("whatsappNumber", sanitizeWhatsAppNumber(rawValue));
+  }
+
+  const whatsappDigits = form.whatsappNumber;
+  const whatsappIsValid = isValidWhatsAppNumber(whatsappDigits);
+  const realtimeWhatsappError =
+    whatsappDigits.length > 0 && !whatsappIsValid ? WHATSAPP_VALIDATION_MESSAGE : null;
+  const submitWhatsappError =
+    validationError === WHATSAPP_VALIDATION_MESSAGE ||
+    validationError === "WhatsApp Number is required."
+      ? validationError
+      : null;
+  const showWhatsappError = realtimeWhatsappError || submitWhatsappError;
+  const whatsappInputClassName = `${fieldClassName} ${
+    showWhatsappError
+      ? "border-red-500/80 focus:border-red-500"
+      : whatsappIsValid
+        ? "border-accent/45 pr-11 focus:border-accent/60"
+        : ""
+  }`;
 
   function handleClose() {
     if (submitting) return;
@@ -183,16 +208,35 @@ export function ApplicationModal({ open, onClose }: ApplicationModalProps) {
                       <label htmlFor="application-whatsapp" className={labelClassName}>
                         WhatsApp Number
                       </label>
-                      <input
-                        id="application-whatsapp"
-                        type="tel"
-                        required
-                        value={form.whatsappNumber}
-                        onChange={(event) => updateField("whatsappNumber", event.target.value)}
-                        className={fieldClassName}
-                        placeholder="Enter your WhatsApp number"
-                        disabled={submitting}
-                      />
+                      <div className="relative">
+                        <input
+                          id="application-whatsapp"
+                          type="tel"
+                          inputMode="numeric"
+                          autoComplete="tel"
+                          required
+                          value={form.whatsappNumber}
+                          onChange={(event) => handleWhatsAppChange(event.target.value)}
+                          className={whatsappInputClassName}
+                          placeholder="Enter your WhatsApp number"
+                          disabled={submitting}
+                          aria-invalid={showWhatsappError ? true : undefined}
+                          aria-describedby={showWhatsappError ? "application-whatsapp-error" : undefined}
+                        />
+                        {whatsappIsValid && (
+                          <span
+                            className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-sm font-semibold text-accent"
+                            aria-hidden
+                          >
+                            ✓
+                          </span>
+                        )}
+                      </div>
+                      {showWhatsappError && (
+                        <p id="application-whatsapp-error" className="mt-2 text-sm text-orange">
+                          {showWhatsappError}
+                        </p>
+                      )}
                     </div>
 
                     <div className="grid gap-5 sm:grid-cols-2">
@@ -247,7 +291,11 @@ export function ApplicationModal({ open, onClose }: ApplicationModalProps) {
                       </div>
                     </div>
 
-                    {validationError && <p className="text-sm text-orange">{validationError}</p>}
+                    {validationError &&
+                      validationError !== WHATSAPP_VALIDATION_MESSAGE &&
+                      validationError !== "WhatsApp Number is required." && (
+                        <p className="text-sm text-orange">{validationError}</p>
+                      )}
                     {submitError && <p className="text-sm text-orange">{submitError}</p>}
                   </div>
                 </div>

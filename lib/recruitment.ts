@@ -35,10 +35,30 @@ export const EMPTY_APPLICATION_FORM: ApplicationFormState = {
   preference2: "",
 };
 
+export const WHATSAPP_VALIDATION_MESSAGE = "Please enter a valid 10-digit WhatsApp number.";
+
+export function sanitizeWhatsAppNumber(value: string): string {
+  return value.replace(/\D/g, "");
+}
+
+export function isValidWhatsAppNumber(value: string): boolean {
+  return sanitizeWhatsAppNumber(value).length === 10;
+}
+
+export function getWhatsAppValidationError(value: string): string | null {
+  const digits = sanitizeWhatsAppNumber(value);
+  if (!digits) return "WhatsApp Number is required.";
+  if (digits.length !== 10) return WHATSAPP_VALIDATION_MESSAGE;
+  return null;
+}
+
 export function validateApplicationForm(form: ApplicationFormState): string | null {
   if (!form.name.trim()) return "Full Name is required.";
   if (!form.registrationNumber.trim()) return "Registration Number is required.";
-  if (!form.whatsappNumber.trim()) return "WhatsApp Number is required.";
+
+  const whatsappError = getWhatsAppValidationError(form.whatsappNumber);
+  if (whatsappError) return whatsappError;
+
   if (!form.preference1) return "Preference 1 is required.";
   if (!form.preference2) return "Preference 2 is required.";
   if (form.preference1 === form.preference2) {
@@ -52,7 +72,7 @@ export function toApplicationInsert(form: ApplicationFormState): ApplicationInse
   return {
     full_name: form.name.trim(),
     registration_number: form.registrationNumber.trim(),
-    whatsapp_number: form.whatsappNumber.trim(),
+    whatsapp_number: sanitizeWhatsAppNumber(form.whatsappNumber),
     preference_1: form.preference1 as RecruitmentSubsystem,
     preference_2: form.preference2 as RecruitmentSubsystem,
   };
