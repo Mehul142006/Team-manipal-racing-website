@@ -29,7 +29,9 @@ export async function getResearchDocuments(): Promise<ResearchDocument[]> {
 
     const publications = RESEARCH_PUBLICATIONS.filter((publication) =>
       fileExists(publication.filename),
-    ).sort((a, b) => Number(a.year) - Number(b.year) || a.title.localeCompare(b.title));
+    )
+      .sort((a, b) => Number(a.year) - Number(b.year) || a.title.localeCompare(b.title))
+      .reverse();
 
     return publications
       .map((publication) => {
