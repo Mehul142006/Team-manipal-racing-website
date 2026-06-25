@@ -19,6 +19,7 @@ const SUBSYSTEM_PHOTO_CANDIDATES: Record<SubsystemSlug, readonly string[]> = {
     "Research",
   ],
   "electric-powertrain": [
+    "EPT",
     "ElectricPowertrain",
     "Electric_Powertrain",
     "Electric Powertrain",

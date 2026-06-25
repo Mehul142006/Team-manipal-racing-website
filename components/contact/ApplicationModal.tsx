@@ -13,7 +13,12 @@ import {
   type RecruitmentSubsystem,
 } from "@/lib/recruitment";
 import { ModalPortal } from "@/components/ui/ModalPortal";
-import { assertSupabaseConfigured, supabase } from "@/lib/supabase";
+import {
+  assertSupabaseConfigured,
+  getSupabaseApplicationsInsertUrl,
+  getSupabaseClient,
+  logSupabaseProductionConfig,
+} from "@/lib/supabase";
 
 type ApplicationModalProps = {
   open: boolean;
@@ -31,6 +36,11 @@ export function ApplicationModal({ open, onClose }: ApplicationModalProps) {
   const [submitError, setSubmitError] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [success, setSuccess] = useState(false);
+
+  useEffect(() => {
+    if (!open) return;
+    logSupabaseProductionConfig("application-modal-open");
+  }, [open]);
 
   useEffect(() => {
     if (!open) return;
@@ -109,11 +119,29 @@ export function ApplicationModal({ open, onClose }: ApplicationModalProps) {
     try {
       assertSupabaseConfigured();
 
-      const { error } = await supabase.from("applications").insert(toApplicationInsert(form));
+      const payload = toApplicationInsert(form);
+      const insertUrl = getSupabaseApplicationsInsertUrl(process.env.NEXT_PUBLIC_SUPABASE_URL ?? "");
+
+      console.log("[application-submit] Inserting row", {
+        insertUrl,
+        table: "applications",
+      });
+
+      const supabase = getSupabaseClient();
+      const { error } = await supabase.from("applications").insert(payload);
 
       if (error) {
+        console.error("[application-submit] Supabase insert(...) failed", {
+          insertUrl,
+          message: error.message,
+          code: error.code,
+          details: error.details,
+          hint: error.hint,
+        });
         throw new Error(error.message || "Unable to submit application.");
       }
+
+      console.log("[application-submit] Supabase insert succeeded", { insertUrl });
 
       setForm(EMPTY_APPLICATION_FORM);
       setSuccess(true);
@@ -122,6 +150,7 @@ export function ApplicationModal({ open, onClose }: ApplicationModalProps) {
         onClose();
       }, 2000);
     } catch (error) {
+      console.error("[application-submit] Form submission error:", error);
       setSubmitError(error instanceof Error ? error.message : "Unable to submit application.");
     } finally {
       setSubmitting(false);
