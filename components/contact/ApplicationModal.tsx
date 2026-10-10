@@ -8,17 +8,10 @@ import {
   WHATSAPP_VALIDATION_MESSAGE,
   isValidWhatsAppNumber,
   sanitizeWhatsAppNumber,
-  toApplicationInsert,
   validateApplicationForm,
   type RecruitmentSubsystem,
 } from "@/lib/recruitment";
 import { ModalPortal } from "@/components/ui/ModalPortal";
-import {
-  assertSupabaseConfigured,
-  getSupabaseApplicationsInsertUrl,
-  getSupabaseClient,
-  logSupabaseProductionConfig,
-} from "@/lib/supabase";
 
 type ApplicationModalProps = {
   open: boolean;
@@ -36,11 +29,6 @@ export function ApplicationModal({ open, onClose }: ApplicationModalProps) {
   const [submitError, setSubmitError] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [success, setSuccess] = useState(false);
-
-  useEffect(() => {
-    if (!open) return;
-    logSupabaseProductionConfig("application-modal-open");
-  }, [open]);
 
   useEffect(() => {
     if (!open) return;
@@ -117,31 +105,28 @@ export function ApplicationModal({ open, onClose }: ApplicationModalProps) {
     setSubmitting(true);
 
     try {
-      assertSupabaseConfigured();
-
-      const payload = toApplicationInsert(form);
-      const insertUrl = getSupabaseApplicationsInsertUrl(process.env.NEXT_PUBLIC_SUPABASE_URL ?? "");
-
-      console.log("[application-submit] Inserting row", {
-        insertUrl,
-        table: "applications",
+      const response = await fetch("/api/applications", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
       });
 
-      const supabase = getSupabaseClient();
-      const { error } = await supabase.from("applications").insert(payload);
+      const result = (await response.json().catch(() => ({}))) as { error?: string };
 
-      if (error) {
-        console.error("[application-submit] Supabase insert(...) failed", {
-          insertUrl,
-          message: error.message,
-          code: error.code,
-          details: error.details,
-          hint: error.hint,
+      if (!response.ok) {
+        console.error("[application-submit] API request failed", {
+          status: response.status,
+          error: result.error,
         });
-        throw new Error(error.message || "Unable to submit application.");
+
+        if (response.status === 404) {
+          throw new Error("Application service not found. Redeploy the latest site to Vercel.");
+        }
+
+        throw new Error(result.error || "Unable to submit application.");
       }
 
-      console.log("[application-submit] Supabase insert succeeded", { insertUrl });
+      console.log("[application-submit] Application submitted successfully");
 
       setForm(EMPTY_APPLICATION_FORM);
       setSuccess(true);

@@ -21,6 +21,22 @@ export function isPlaceholderAsset(filename: string): boolean {
   return filename.toLowerCase().startsWith("placeholder");
 }
 
+/** Section imagery in public/sponsors — not a partner logo. */
+export function isSponsorSectionAsset(filename: string): boolean {
+  const base = filename.replace(/\.[^.]+$/, "");
+  return normalizeSponsorKey(base) === normalizeSponsorKey("Become_a_sponsor");
+}
+
+/** Display names for logo files where the filename casing differs from the official sponsor name. */
+export const SPONSOR_DISPLAY_NAME_BY_FILE: Record<string, string> = {
+  "AUTOSMITH ADVANCED AUTOMOBILE DETAILING.jpeg": "Autosmith Advanced Automobile Detailing",
+  "OUTLOOK INTERIOR PVT. LTD..jpeg": "Outlook Interior Pvt. Ltd.",
+};
+
+export function sponsorDisplayNameForFile(filename: string): string {
+  return SPONSOR_DISPLAY_NAME_BY_FILE[filename] ?? formatSponsorName(filename);
+}
+
 /** Derive a readable sponsor name from a filename (e.g. Virya.png → Virya). */
 export function formatSponsorName(filename: string): string {
   const base = filename.replace(/\.[^.]+$/, "");

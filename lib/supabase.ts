@@ -2,13 +2,16 @@ import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 
 const APPLICATIONS_TABLE = "applications";
 
-function readEnv(name: "NEXT_PUBLIC_SUPABASE_URL" | "NEXT_PUBLIC_SUPABASE_ANON_KEY"): string {
-  return (process.env[name] ?? "").trim();
+/** Public project URL — safe fallback when env var is missing on Vercel. */
+const FALLBACK_SUPABASE_URL = "https://xhisxyrklfahnzmwedyx.supabase.co";
+
+function cleanEnvValue(value: string | undefined): string {
+  return (value ?? "").trim().replace(/^['"]|['"]$/g, "");
 }
 
 /**
  * Supabase project URL only — must NOT include /rest/v1.
- * If /rest/v1 is included, supabase-js builds .../rest/v1/rest/v1/... (PGRST125).
+ * If /rest/v1 is included, requests hit .../rest/v1/rest/v1/... (PGRST125).
  */
 export function normalizeSupabaseUrl(rawUrl: string): string {
   let url = rawUrl.trim();
@@ -33,83 +36,136 @@ export function getSupabaseApplicationsInsertUrl(baseUrl: string): string {
   return `${restUrl}/${APPLICATIONS_TABLE}`;
 }
 
-export function logSupabaseProductionConfig(context: string): void {
-  const rawUrl = readEnv("NEXT_PUBLIC_SUPABASE_URL");
-  const rawKey = readEnv("NEXT_PUBLIC_SUPABASE_ANON_KEY");
-  const normalizedUrl = normalizeSupabaseUrl(rawUrl);
+export type SupabaseServerConfig = {
+  url: string;
+  key: string;
+  source: {
+    url: "SUPABASE_URL" | "NEXT_PUBLIC_SUPABASE_URL" | "fallback" | "none";
+    key: "SUPABASE_ANON_KEY" | "NEXT_PUBLIC_SUPABASE_ANON_KEY" | "none";
+  };
+};
 
-  console.log("SUPABASE URL:", process.env.NEXT_PUBLIC_SUPABASE_URL);
-  console.log(`[supabase:${context}] NEXT_PUBLIC_SUPABASE_URL (raw):`, rawUrl || "(empty/undefined)");
-  console.log(`[supabase:${context}] NEXT_PUBLIC_SUPABASE_URL (normalized):`, normalizedUrl || "(empty)");
+/** Server-side config — runtime SUPABASE_* vars preferred over build-time NEXT_PUBLIC_*. */
+export function getSupabaseServerConfig(): SupabaseServerConfig {
+  const urlFromServer = cleanEnvValue(process.env.SUPABASE_URL);
+  const urlFromPublic = cleanEnvValue(process.env.NEXT_PUBLIC_SUPABASE_URL);
+  const keyFromServer = cleanEnvValue(process.env.SUPABASE_ANON_KEY);
+  const keyFromPublic = cleanEnvValue(process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY);
+
+  let urlSource: SupabaseServerConfig["source"]["url"] = "none";
+  let rawUrl = "";
+
+  if (urlFromServer) {
+    rawUrl = urlFromServer;
+    urlSource = "SUPABASE_URL";
+  } else if (urlFromPublic) {
+    rawUrl = urlFromPublic;
+    urlSource = "NEXT_PUBLIC_SUPABASE_URL";
+  } else {
+    rawUrl = FALLBACK_SUPABASE_URL;
+    urlSource = "fallback";
+  }
+
+  let keySource: SupabaseServerConfig["source"]["key"] = "none";
+  let rawKey = "";
+
+  if (keyFromServer) {
+    rawKey = keyFromServer;
+    keySource = "SUPABASE_ANON_KEY";
+  } else if (keyFromPublic) {
+    rawKey = keyFromPublic;
+    keySource = "NEXT_PUBLIC_SUPABASE_ANON_KEY";
+  }
+
+  return {
+    url: normalizeSupabaseUrl(rawUrl),
+    key: rawKey,
+    source: { url: urlSource, key: keySource },
+  };
+}
+
+export function createSupabaseServerClient(): SupabaseClient {
+  const config = getSupabaseServerConfig();
+
+  if (!config.url || !config.key) {
+    console.error("[supabase:server] Missing Supabase anon key.", {
+      urlSource: config.source.url,
+      keySource: config.source.key,
+    });
+    throw new Error("Supabase is not configured on the server.");
+  }
+
+  return createClient(config.url, config.key);
+}
+
+export function logSupabaseServerConfig(context: string): void {
+  const config = getSupabaseServerConfig();
+
+  console.log(`[supabase:${context}] URL source:`, config.source.url);
+  console.log(`[supabase:${context}] Key source:`, config.source.key);
+  console.log(`[supabase:${context}] URL configured:`, Boolean(config.url));
   console.log(
-    `[supabase:${context}] NEXT_PUBLIC_SUPABASE_ANON_KEY configured:`,
-    Boolean(rawKey),
-    rawKey ? `(length ${rawKey.length}, prefix ${rawKey.slice(0, 12)}…)` : "(empty/undefined)",
+    `[supabase:${context}] Key configured:`,
+    Boolean(config.key),
+    config.key ? `(length ${config.key.length}, prefix ${config.key.slice(0, 12)}…)` : "",
   );
   console.log(
     `[supabase:${context}] Expected REST insert URL:`,
-    getSupabaseApplicationsInsertUrl(rawUrl) || "(none)",
+    getSupabaseApplicationsInsertUrl(config.url) || "(none)",
   );
-
-  if (!rawUrl || !rawKey) {
-    console.error(
-      `[supabase:${context}] Missing environment variables. NEXT_PUBLIC_* values are embedded at build time — set them in Vercel Project Settings → Environment Variables for Production, then trigger a new deployment.`,
-    );
-    return;
-  }
-
-  if (rawUrl !== normalizedUrl) {
-    console.warn(
-      `[supabase:${context}] Supabase URL was normalized. Use only the project URL in Vercel (https://<project-ref>.supabase.co) without /rest/v1.`,
-      { rawUrl, normalizedUrl },
-    );
-  }
 }
 
-let client: SupabaseClient | null = null;
+export type SupabaseInsertResult =
+  | { ok: true }
+  | { ok: false; status: number; message: string; code?: string; details?: string };
 
-export function getSupabaseClient(): SupabaseClient {
-  if (client) return client;
-
-  logSupabaseProductionConfig("createClient");
-
-  const supabaseUrl = normalizeSupabaseUrl(readEnv("NEXT_PUBLIC_SUPABASE_URL"));
-  const supabaseAnonKey = readEnv("NEXT_PUBLIC_SUPABASE_ANON_KEY");
-
-  if (!supabaseUrl || !supabaseAnonKey) {
-    const message =
-      "Missing Supabase environment variables. Set NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY in Vercel, then redeploy.";
-    console.error("[supabase:createClient]", message);
-    throw new Error(message);
+/** Direct REST insert — explicit URL avoids supabase-js path issues on Vercel. */
+export async function insertApplicationRow(
+  payload: Record<string, string>,
+  config: SupabaseServerConfig = getSupabaseServerConfig(),
+): Promise<SupabaseInsertResult> {
+  if (!config.url || !config.key) {
+    return {
+      ok: false,
+      status: 503,
+      message: "Supabase is not configured on the server.",
+    };
   }
+
+  const insertUrl = getSupabaseApplicationsInsertUrl(config.url);
+
+  console.log("[supabase:insert] POST", insertUrl);
+
+  const response = await fetch(insertUrl, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      apikey: config.key,
+      Authorization: `Bearer ${config.key}`,
+      Prefer: "return=minimal",
+    },
+    body: JSON.stringify(payload),
+    cache: "no-store",
+  });
+
+  if (response.ok) {
+    return { ok: true };
+  }
+
+  const responseText = await response.text();
+  let parsed: { message?: string; code?: string; details?: string } = {};
 
   try {
-    client = createClient(supabaseUrl, supabaseAnonKey);
-    console.log("[supabase:createClient] Client initialized.", {
-      restBaseUrl: getSupabaseRestUrl(supabaseUrl),
-    });
-  } catch (error) {
-    console.error("[supabase:createClient] createClient(...) failed:", error);
-    throw error;
+    parsed = JSON.parse(responseText) as typeof parsed;
+  } catch {
+    /* plain-text error body */
   }
 
-  return client;
-}
-
-export function assertSupabaseConfigured(): void {
-  const rawUrl = readEnv("NEXT_PUBLIC_SUPABASE_URL");
-  const rawKey = readEnv("NEXT_PUBLIC_SUPABASE_ANON_KEY");
-  const normalizedUrl = normalizeSupabaseUrl(rawUrl);
-
-  logSupabaseProductionConfig("assertSupabaseConfigured");
-
-  if (!normalizedUrl || !rawKey) {
-    const message =
-      "Missing Supabase environment variables. Set NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY in Vercel, then redeploy.";
-    console.error("[supabase:assertSupabaseConfigured]", message, {
-      hasUrl: Boolean(rawUrl),
-      hasKey: Boolean(rawKey),
-    });
-    throw new Error(message);
-  }
+  return {
+    ok: false,
+    status: response.status,
+    message: parsed.message || responseText || response.statusText,
+    code: parsed.code,
+    details: parsed.details,
+  };
 }

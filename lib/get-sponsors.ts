@@ -5,7 +5,9 @@ import {
   formatSponsorName,
   isPlaceholderAsset,
   isSponsorLogoFile,
+  isSponsorSectionAsset,
   normalizeSponsorKey,
+  sponsorDisplayNameForFile,
   SPONSOR_PLACEHOLDER,
   type SponsorItem,
   type SponsorTier,
@@ -18,7 +20,13 @@ function readLogoFiles(): string[] {
 
   return fs
     .readdirSync(SPONSORS_DIR)
-    .filter((file) => !file.startsWith(".") && isSponsorLogoFile(file) && !isPlaceholderAsset(file))
+    .filter(
+      (file) =>
+        !file.startsWith(".") &&
+        isSponsorLogoFile(file) &&
+        !isPlaceholderAsset(file) &&
+        !isSponsorSectionAsset(file),
+    )
     .sort((a, b) => a.localeCompare(b, undefined, { numeric: true }));
 }
 
@@ -80,7 +88,7 @@ export function getSponsors(): SponsorItem[] {
     for (const file of files) {
       if (usedFiles.has(file)) continue;
 
-      const name = formatSponsorName(file);
+      const name = sponsorDisplayNameForFile(file);
       sponsors.push({
         id: file,
         name,
