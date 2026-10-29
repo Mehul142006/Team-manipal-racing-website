@@ -1,63 +1,87 @@
 import { NextResponse } from "next/server";
+import { ensureDatabase } from "@/lib/db";
 import {
   toApplicationInsert,
   validateApplicationForm,
   type ApplicationFormState,
 } from "@/lib/recruitment";
-import {
-  getSupabaseServerConfig,
-  insertApplicationRow,
-  logSupabaseServerConfig,
-} from "@/lib/supabase";
+import { clientIp, isCrossSitePost, rateLimit } from "@/lib/request-guards";
 
-export async function GET() {
-  const config = getSupabaseServerConfig();
-
-  return NextResponse.json({
-    configured: Boolean(config.url && config.key),
-    urlSource: config.source.url,
-    keySource: config.source.key,
-  });
-}
+export const runtime = "nodejs";
 
 export async function POST(request: Request) {
-  logSupabaseServerConfig("api/applications");
+  if (isCrossSitePost(request)) {
+    return NextResponse.json({ error: "Unable to submit this application." }, { status: 403 });
+  }
+
+  if (!rateLimit(`application:${clientIp(request)}`, 5, 10 * 60 * 1000)) {
+    return NextResponse.json(
+      { error: "Too many applications were sent. Please wait a few minutes and try again." },
+      { status: 429 },
+    );
+  }
 
   try {
     const body = (await request.json()) as ApplicationFormState;
     const validationMessage = validateApplicationForm(body);
-
     if (validationMessage) {
       return NextResponse.json({ error: validationMessage }, { status: 400 });
     }
 
-    const config = getSupabaseServerConfig();
-    if (!config.key) {
-      console.error("[api/applications] Missing Supabase anon key.", config.source);
+    const application = toApplicationInsert(body);
+    if (
+      application.full_name.length > 120 ||
+      application.registration_number.length > 40 ||
+      application.whatsapp_number.length !== 10
+    ) {
+      return NextResponse.json({ error: "Check the application details and try again." }, { status: 400 });
+    }
+
+    const sql = await ensureDatabase();
+    const recent = await sql`
+      select id
+      from recruitment_applications
+      where registration_number = ${application.registration_number}
+        and whatsapp_number = ${application.whatsapp_number}
+        and created_at > now() - interval '2 minutes'
+      limit 1
+    `;
+
+    if (recent.length > 0) {
       return NextResponse.json(
-        {
-          error:
-            "Application service is not configured. Add SUPABASE_ANON_KEY in Vercel (Production) and redeploy.",
-        },
-        { status: 503 },
+        { error: "This application was just submitted. Please wait before sending it again." },
+        { status: 409 },
       );
     }
 
-    const payload = toApplicationInsert(body);
-    const result = await insertApplicationRow(payload, config);
+    await sql`
+      insert into recruitment_applications (
+        full_name,
+        registration_number,
+        whatsapp_number,
+        preference_1,
+        preference_2
+      )
+      values (
+        ${application.full_name},
+        ${application.registration_number},
+        ${application.whatsapp_number},
+        ${application.preference_1},
+        ${application.preference_2}
+      )
+    `;
 
-    if (!result.ok) {
-      console.error("[api/applications] Supabase insert failed", result);
-      return NextResponse.json(
-        { error: result.message || "Unable to submit application." },
-        { status: result.status >= 400 ? result.status : 500 },
-      );
-    }
-
-    console.log("[api/applications] Insert succeeded");
     return NextResponse.json({ ok: true });
   } catch (error) {
-    console.error("[api/applications] Unexpected error:", error);
-    return NextResponse.json({ error: "Unable to submit application." }, { status: 500 });
+    console.error("[api/applications] Unable to save application.");
+    const missingDatabase = error instanceof Error && error.message === "DATABASE_URL is not configured.";
+    return NextResponse.json(
+      {
+        error: missingDatabase
+          ? "Applications are not configured yet. Please try again later."
+          : "Unable to submit application.",
+      },
+      { status: missingDatabase ? 503 : 500 },
+    );
   }
 }

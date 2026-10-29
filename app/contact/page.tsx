@@ -1,4 +1,5 @@
 import { ContactHero } from "@/components/contact/ContactHero";
+import { ContactForm } from "@/components/ui/ContactForm";
 import { RecruitmentSection } from "@/components/contact/RecruitmentSection";
 import { GoogleMapsLink } from "@/components/ui/GoogleMapsLink";
 import { SocialLinks } from "@/components/ui/SocialLinks";
@@ -65,6 +66,17 @@ export default function ContactPage() {
                 </p>
                 <SocialLinks className="mt-5" />
               </div>
+            </div>
+          </div>
+
+          <div className="liquid-glass mt-8 rounded-3xl p-8 sm:p-10">
+            <p className="text-xs font-semibold uppercase tracking-widest text-accent">Contact Us</p>
+            <h2 className="mt-3 text-2xl font-bold text-white">Send a message</h2>
+            <p className="mt-3 max-w-2xl text-sm leading-relaxed text-muted">
+              For sponsorship, collaboration, and general questions.
+            </p>
+            <div className="mt-6">
+              <ContactForm />
             </div>
           </div>
 
