@@ -6,7 +6,9 @@ import { PageHero } from "@/components/ui/GlassCard";
 import { SectionTitleAccent } from "@/components/ui/SectionTitleAccent";
 import { MemberCard } from "@/components/ui/MemberCard";
 import { SectionAtmosphere } from "@/components/ui/SectionAtmosphere";
+import { ExpandablePhoto } from "@/components/ui/ExpandablePhoto";
 import { LEADERSHIP, SUBSYSTEM_TEAMS, SUBSYSTEMS } from "@/lib/data";
+import { getTeamMemberPhoto } from "@/lib/team-photos";
 
 function SectionTitle({ children }: { children: ReactNode }) {
   return (
@@ -19,16 +21,30 @@ function SectionTitle({ children }: { children: ReactNode }) {
 
 type TeamPageContentProps = {
   teamPhotoSrc?: string | null;
+  structurePhotoSrc?: string | null;
 };
 
-export function TeamPageContent({ teamPhotoSrc }: TeamPageContentProps) {
+export function TeamPageContent({ teamPhotoSrc, structurePhotoSrc }: TeamPageContentProps) {
   return (
     <>
       <PageHero
         eyebrow="The People"
         title="Meet The Team"
-        description="Team Manipal Racing Electric 2025 — the engineers and leaders behind our championship E-BAJA program."
+        description="Team Manipal Racing Electric — the engineers and leaders behind the E-BAJA program."
       />
+
+      {structurePhotoSrc && (
+        <section className="pb-4 sm:pb-8">
+          <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+            <SectionTitle>Team Structure</SectionTitle>
+            <ExpandablePhoto
+              src={structurePhotoSrc}
+              alt="Team Manipal Racing Electric team structure"
+              frameClassName="mx-auto max-w-5xl"
+            />
+          </div>
+        </section>
+      )}
 
       <SectionAtmosphere
         watermark="PEOPLE"
@@ -44,6 +60,7 @@ export function TeamPageContent({ teamPhotoSrc }: TeamPageContentProps) {
                 key={member.name}
                 name={member.name}
                 role={member.role}
+                image={getTeamMemberPhoto(member.name)}
                 size="leadership"
                 delay={i * 0.08}
               />
@@ -91,6 +108,7 @@ export function TeamPageContent({ teamPhotoSrc }: TeamPageContentProps) {
                         key={`${team.id}-${member.name}`}
                         name={member.name}
                         role={member.role}
+                        image={getTeamMemberPhoto(member.name)}
                         delay={sectionIndex * 0.04 + i * 0.06}
                       />
                     ))}

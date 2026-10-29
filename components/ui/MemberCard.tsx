@@ -2,7 +2,6 @@
 
 import { motion } from "framer-motion";
 import { PlaceholderImage } from "@/components/ui/PlaceholderImage";
-import { MEMBER_PLACEHOLDER } from "@/lib/images";
 
 function getBadgeStyle(role: string): string {
   const normalized = role.toLowerCase();
@@ -23,6 +22,16 @@ function getBadgeStyle(role: string): string {
   return "border-white/10 bg-white/5 text-muted";
 }
 
+function memberInitials(name: string) {
+  return name
+    .split(/\s+/)
+    .map((part) => part.replace(/[^A-Za-z]/g, ""))
+    .filter((part) => part.length > 0)
+    .slice(0, 2)
+    .map((part) => part[0]?.toUpperCase() ?? "")
+    .join("");
+}
+
 type MemberCardProps = {
   name: string;
   role: string;
@@ -41,8 +50,8 @@ export function MemberCard({
   delay = 0,
 }: MemberCardProps) {
   const isLeadership = size === "leadership";
-
-  const photoAspect = isLeadership ? "aspect-[6/5]" : "aspect-[5/4]";
+  const photoAspect = isLeadership ? "aspect-[4/5]" : "aspect-[4/5]";
+  const initials = memberInitials(name);
 
   return (
     <motion.div
@@ -52,15 +61,25 @@ export function MemberCard({
       transition={{ duration: 0.5, delay, ease: [0.22, 1, 0.36, 1] }}
       className="liquid-glass liquid-glass-card group flex h-full flex-col overflow-hidden rounded-2xl"
     >
-      <div className={`relative w-full shrink-0 overflow-hidden ${photoAspect}`}>
-        <PlaceholderImage
-          src={image ?? MEMBER_PLACEHOLDER}
-          alt={name}
-          fill
-          gradient="from-steel via-navy to-midnight"
-          className="transition-transform duration-500 group-hover:scale-105"
-        />
-        <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-midnight/70 via-transparent to-transparent opacity-50" />
+      <div className={`relative w-full shrink-0 overflow-hidden border-b border-white/10 bg-midnight ${photoAspect}`}>
+        {image ? (
+          <PlaceholderImage
+            src={image}
+            alt={name}
+            fill
+            objectFit="cover"
+            gradient="from-steel via-navy to-midnight"
+            className="object-top transition-transform duration-500 group-hover:scale-[1.03]"
+          />
+        ) : (
+          <div className="absolute inset-0 flex flex-col items-center justify-center bg-gradient-to-br from-steel via-navy to-midnight">
+            <span className="font-mono text-3xl font-bold tracking-wide text-white/80">{initials}</span>
+            <span className="mt-3 text-[10px] font-semibold uppercase tracking-[0.22em] text-muted">
+              Photo coming soon
+            </span>
+          </div>
+        )}
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-midnight/55 via-transparent to-transparent opacity-70" />
       </div>
 
       <div

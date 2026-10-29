@@ -59,34 +59,33 @@ export const VEHICLE_VIEWS = [
 
 export const TIMELINE_EVENTS = [
   {
-    year: "2015",
-    title: "Team Formation",
+    year: "2021",
+    title: "Team Founded",
     description:
-      "Team Manipal Racing Electric was founded at MIT Manipal with a vision to compete at the highest level of student motorsport.",
+      "Team Manipal Racing Electric was founded as the official E-BAJA SAE team of Manipal Academy of Higher Education, after five years of research and development.",
   },
   {
-    year: "2018–2023",
-    title: "Previous BAJA Seasons",
+    year: "EV1",
+    title: "First Electric Vehicle",
     description:
-      "Multiple competitive seasons in BAJA SAE India, building expertise in off-road vehicle design, manufacturing, and endurance racing.",
-  },
-  {
-    year: "2024",
-    title: "EV Transition",
-    description:
-      "Strategic pivot to electric powertrains — re-engineering the entire platform for sustainable, high-performance off-road racing.",
+      "The first EV debuted virtually during the pandemic.",
   },
   {
     year: "2025",
-    title: "BAJA SAE INDIA 2025",
+    title: "E-BAJA 2025",
     description:
-      "Competing with a fully electric eBAJA prototype featuring advanced telemetry, BMS integration, and data-driven engineering.",
+      "1st in Engineering Design and Sled Pull, 2nd in Maneuverability, 3rd in Overall Dynamics, and 9th overall.",
   },
   {
-    year: "Future",
-    title: "Future Goals",
+    year: "2026",
+    title: "E-BAJA 2026",
     description:
-      "Pushing boundaries in electric off-road racing, autonomous systems integration, and international Formula Student competition.",
+      "3rd in Engineering Design and 27th overall out of 100+ teams.",
+  },
+  {
+    year: "Next",
+    title: "EV7",
+    description: "The next vehicle is in development. Details coming soon.",
   },
 ] as const;
 

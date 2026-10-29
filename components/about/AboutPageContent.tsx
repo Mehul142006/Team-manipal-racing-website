@@ -2,37 +2,11 @@
 
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { GlassCard, PageHero } from "@/components/ui/GlassCard";
+import { ExpandablePhoto } from "@/components/ui/ExpandablePhoto";
+import { PageHero } from "@/components/ui/GlassCard";
 import { SectionTitleAccent } from "@/components/ui/SectionTitleAccent";
 import type { AboutPhotos } from "@/lib/get-about-photo";
-import { MISSION, SUBSYSTEMS, VISION } from "@/lib/data";
-
-const SECTIONS = [
-  {
-    id: "history",
-    title: "Team History",
-    text: "Founded in 2021 as the official E-BAJA SAE team of MAHE, Team Manipal Racing Electric emerged from years of electric vehicle research at MIT Manipal. From EV1 to EV6, each generation represents a leap in engineering capability and competition performance.",
-    layout: "text-left",
-    photoKey: "teamHistory",
-    alt: "Team Manipal Racing Electric team history",
-  },
-  {
-    id: "offroad",
-    title: "Why Electric Off-Road?",
-    text: "Electric powertrains deliver instant torque, zero emissions, and unprecedented design freedom for off-road racing. We build electric ATVs to prove that sustainable engineering and championship performance are not mutually exclusive.",
-    layout: "image-left",
-    photoKey: "bestPhoto",
-    alt: "Team Manipal Racing Electric off-road vehicle",
-  },
-  {
-    id: "structure",
-    title: "Team Structure",
-    text: "TMRE operates as a professional engineering organization with eight specialized subsystems — each led by dedicated student engineers working collaboratively from design through competition.",
-    layout: "text-left",
-    photoKey: "teamStructure",
-    alt: "Team Manipal Racing Electric team structure",
-  },
-] as const;
+import { ABOUT_CONTENT, ABOUT_HIGHLIGHTS, SUBSYSTEMS } from "@/lib/data";
 
 const ease = [0.22, 1, 0.36, 1] as const;
 
@@ -40,133 +14,130 @@ type AboutPageContentProps = {
   photos: AboutPhotos;
 };
 
-type AboutSectionProps = {
-  title: string;
-  text: string;
-  imageSrc: string;
-  alt: string;
-  layout: "image-left" | "text-left";
-  priority?: boolean;
-};
-
-function AboutSectionImage({
-  imageSrc,
-  alt,
-  layout,
-  priority = false,
-}: {
-  imageSrc: string;
-  alt: string;
-  layout: "image-left" | "text-left";
-  priority?: boolean;
-}) {
-  return (
-    <div
-      className={`flex w-full ${layout === "text-left" ? "justify-center lg:justify-end" : "justify-center lg:justify-start"}`}
-    >
-      <div className="group w-full max-w-[420px] liquid-glass liquid-glass-card overflow-hidden rounded-3xl shadow-[0_24px_64px_rgba(0,0,0,0.45)]">
-        {/* Native img so height follows the full uncropped photograph */}
-        <img
-          src={imageSrc}
-          alt={alt}
-          loading={priority ? "eager" : "lazy"}
-          decoding="async"
-          className="block h-auto w-full object-contain transition-transform duration-700 group-hover:scale-[1.02]"
-        />
-      </div>
-    </div>
-  );
-}
-
-function AboutSectionBlock({ title, text, imageSrc, alt, layout, priority }: AboutSectionProps) {
-  const imageFirstOnMobile = layout === "text-left";
-  const imageOrder = imageFirstOnMobile ? "order-1 lg:order-2" : "order-1 lg:order-1";
-  const textOrder = imageFirstOnMobile ? "order-2 lg:order-1" : "order-2 lg:order-2";
-
-  return (
-    <section className="py-16 sm:py-24">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="grid items-center gap-10 lg:grid-cols-[minmax(0,1fr)_auto] lg:gap-12">
-          <motion.div
-            initial={{ opacity: 0, x: layout === "text-left" ? -24 : 24 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true, margin: "-80px" }}
-            transition={{ duration: 0.65, ease }}
-            className={textOrder}
-          >
-            <h2 className="text-2xl font-bold text-white sm:text-3xl">{title}</h2>
-            <SectionTitleAccent size="sm" />
-            <p className="mt-4 max-w-xl text-base leading-relaxed text-muted sm:text-lg">{text}</p>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 28 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-80px" }}
-            transition={{ duration: 0.75, ease, delay: 0.08 }}
-            className={imageOrder}
-          >
-            <AboutSectionImage
-              imageSrc={imageSrc}
-              alt={alt}
-              layout={layout}
-              priority={priority}
-            />
-          </motion.div>
-        </div>
-      </div>
-    </section>
-  );
-}
-
 export function AboutPageContent({ photos }: AboutPageContentProps) {
   return (
     <>
       <PageHero
         eyebrow="About Us"
-        title="Engineering Excellence at MIT Manipal"
-        description="The official E-BAJA SAE electric team of MAHE — designing, building, and racing high-performance electric off-road vehicles since 2021."
+        title="Team Manipal Racing Electric"
+        description={ABOUT_CONTENT.lead}
       />
 
-      {SECTIONS.map((section, index) => (
-        <AboutSectionBlock
-          key={section.id}
-          title={section.title}
-          text={section.text}
-          imageSrc={photos[section.photoKey]}
-          alt={section.alt}
-          layout={section.layout}
-          priority={index === 0}
-        />
-      ))}
+      <section className="pb-8 sm:pb-12">
+        <div className="mx-auto grid max-w-7xl items-center gap-10 px-4 sm:px-6 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)] lg:gap-14 lg:px-8">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.65, ease }}
+            className="overflow-hidden rounded-[1.75rem] border border-white/10 shadow-[0_24px_64px_rgba(0,0,0,0.45)]"
+          >
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={photos.bestPhoto}
+              alt="Team Manipal Racing Electric vehicle"
+              className="block h-auto w-full object-contain"
+            />
+          </motion.div>
 
-      <section className="py-16 sm:py-24">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="grid gap-6 lg:grid-cols-2">
-            <GlassCard className="p-8 sm:p-10">
-              <p className="text-xs font-semibold uppercase tracking-widest text-accent">Mission</p>
-              <p className="mt-4 text-base leading-relaxed text-muted">{MISSION}</p>
-            </GlassCard>
-            <GlassCard className="p-8 sm:p-10">
-              <p className="text-xs font-semibold uppercase tracking-widest text-accent">Vision</p>
-              <p className="mt-4 text-base leading-relaxed text-muted">{VISION}</p>
-            </GlassCard>
-          </div>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.65, delay: 0.08, ease }}
+            className="liquid-glass rounded-[1.75rem] p-6 sm:p-8"
+          >
+            <p className="font-mono text-sm uppercase tracking-[0.28em] text-accent">
+              {ABOUT_CONTENT.motto}
+            </p>
+            <h2 className="mt-4 text-2xl font-bold text-white sm:text-3xl">
+              Founded in 2021
+            </h2>
+            <SectionTitleAccent size="sm" className="mt-3" />
+            <p className="mt-5 text-base leading-relaxed text-muted">{ABOUT_CONTENT.body}</p>
+            <p className="mt-4 text-base leading-relaxed text-muted">{ABOUT_CONTENT.vehicle}</p>
+          </motion.div>
         </div>
       </section>
 
-      <section className="py-16 sm:py-24">
+      <section className="py-12 sm:py-16">
+        <div className="mx-auto grid max-w-7xl gap-4 px-4 sm:px-6 md:grid-cols-3 lg:px-8">
+          {ABOUT_HIGHLIGHTS.map((item, index) => (
+            <motion.article
+              key={item.title}
+              initial={{ opacity: 0, y: 16 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.45, delay: index * 0.05, ease }}
+              className="liquid-glass rounded-2xl p-6"
+            >
+              <h3 className="text-sm font-semibold uppercase tracking-[0.18em] text-accent">
+                {item.title}
+              </h3>
+              <p className="mt-3 text-sm leading-relaxed text-white/85">{item.text}</p>
+            </motion.article>
+          ))}
+        </div>
+      </section>
+
+      <section className="py-12 sm:py-20">
+        <div className="mx-auto grid max-w-7xl items-center gap-10 px-4 sm:px-6 lg:grid-cols-2 lg:px-8">
+          <motion.div
+            initial={{ opacity: 0, y: 18 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, ease }}
+          >
+            <h2 className="text-2xl font-bold text-white sm:text-3xl">The vehicle</h2>
+            <SectionTitleAccent size="sm" />
+            <p className="mt-4 max-w-xl text-base leading-relaxed text-muted">
+              Since its founding in 2021, the team has continued to raise the bar.
+              {ABOUT_CONTENT.vehicle}
+            </p>
+          </motion.div>
+          <motion.div
+            initial={{ opacity: 0, y: 18 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.06, ease }}
+            className="overflow-hidden rounded-3xl border border-white/10"
+          >
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={photos.teamHistory}
+              alt="Team Manipal Racing Electric history"
+              className="block h-auto w-full object-contain"
+            />
+          </motion.div>
+        </div>
+      </section>
+
+      <section className="py-12 sm:py-20">
+        <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+          <h2 className="text-2xl font-bold text-white sm:text-3xl">Team structure</h2>
+          <SectionTitleAccent size="sm" className="mb-8 mt-3" />
+          <p className="mb-6 max-w-2xl text-base leading-relaxed text-muted">
+            Eight subsystems work together across design, manufacturing, and competition.
+          </p>
+          <ExpandablePhoto
+            src={photos.teamStructure}
+            alt="Team Manipal Racing Electric team structure"
+          />
+        </div>
+      </section>
+
+      <section className="py-12 sm:pb-24">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <h2 className="text-2xl font-bold text-white sm:text-3xl">Subsystems</h2>
           <SectionTitleAccent size="sm" className="mb-8 mt-3" />
           <div className="flex flex-wrap gap-3">
-            {SUBSYSTEMS.map((s) => (
+            {SUBSYSTEMS.map((subsystem) => (
               <Link
-                key={s.slug}
-                href={`/subsystems?open=${s.slug}`}
-                className="rounded-xl liquid-glass liquid-glass-card px-4 py-2 text-xs font-medium uppercase tracking-widest text-muted transition-colors hover:text-accent"
+                key={subsystem.slug}
+                href={`/subsystems?open=${subsystem.slug}`}
+                className="liquid-glass rounded-xl px-4 py-2 text-xs font-medium uppercase tracking-widest text-muted transition-colors hover:text-accent"
               >
-                {s.title}
+                {subsystem.title}
               </Link>
             ))}
           </div>

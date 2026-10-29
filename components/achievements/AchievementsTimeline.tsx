@@ -1,121 +1,177 @@
 "use client";
 
 import { motion } from "framer-motion";
-import {
-  AchievementOutlineIcon,
-  type AchievementIconType,
-} from "@/components/ui/AchievementOutlineIcon";
-import { highlightRanking } from "@/components/ui/AchievementHighlight";
-import { ACHIEVEMENT_TIMELINE } from "@/lib/data";
+import { EBAJA_SEASONS, EV_EVOLUTION, type ResultTier } from "@/lib/data";
+import type { EvPhotos } from "@/lib/get-site-photos";
 
 const ease = [0.22, 1, 0.36, 1] as const;
 
-type TimelineEntry = {
-  year: string;
-  title: string;
-  detail: string;
-  icon: AchievementIconType;
+const TIER_STYLES: Record<ResultTier, string> = {
+  gold: "border-amber-300/40 bg-amber-300/[0.07] text-amber-200",
+  silver: "border-slate-200/35 bg-slate-200/[0.06] text-slate-100",
+  bronze: "border-orange/45 bg-orange/[0.08] text-orange",
+  listed: "border-white/10 bg-white/[0.03] text-white",
 };
 
-function getAchievementIcon(title: string): AchievementIconType {
-  if (/innovation/i.test(title)) return "lightning";
-  if (/founded|prototype|platform|debut|integration|systems/i.test(title)) return "trend";
-  if (/competition|baja|national/i.test(title)) return "flag";
-  if (/vehicle|ev\d|car|chassis/i.test(title)) return "vehicle";
-  if (/1st|2nd|3rd|overall|pull|maneuverability|design|podium|top/i.test(title)) return "trophy";
-  if (/medal|award|winner/i.test(title)) return "medal";
-  return "trophy";
+function airTier(result: string): ResultTier {
+  const rank = Number(result.match(/AIR\s+(\d+)/i)?.[1]);
+  if (rank === 1) return "gold";
+  if (rank === 2) return "silver";
+  if (rank === 3) return "bronze";
+  return "listed";
 }
 
-function buildTimelineEntries(): TimelineEntry[] {
-  return [...ACHIEVEMENT_TIMELINE]
-    .reverse()
-    .flatMap((yearBlock) =>
-      yearBlock.items.map((item) => ({
-        year: yearBlock.year,
-        title: item.title,
-        detail: item.detail,
-        icon: getAchievementIcon(item.title),
-      })),
-    );
-}
+type AchievementsTimelineProps = {
+  evImages: EvPhotos;
+  podiumSrc?: string | null;
+  competitionSrc?: string | null;
+};
 
-export function AchievementsTimeline() {
-  const entries = buildTimelineEntries();
+export function AchievementsTimeline({
+  evImages,
+  podiumSrc,
+  competitionSrc,
+}: AchievementsTimelineProps) {
+  const seasonImages = [podiumSrc, competitionSrc];
 
   return (
-    <section className="pb-20 sm:pb-28">
-      <div className="relative mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-        <div className="relative space-y-8 sm:space-y-10 lg:space-y-12">
-          <div
-            aria-hidden
-            className="pointer-events-none absolute bottom-2 left-1/2 top-2 hidden w-px -translate-x-1/2 bg-gradient-to-b from-transparent via-white/12 to-transparent md:block"
-          />
+    <div className="pb-20 sm:pb-28">
+      <div className="mx-auto max-w-7xl space-y-16 px-4 sm:space-y-24 sm:px-6 lg:px-8">
+        {EBAJA_SEASONS.map((season, seasonIndex) => {
+          const imageSrc = seasonImages[seasonIndex] ?? seasonImages[0];
 
-          {entries.map((entry, index) => {
-            const cardOnLeft = index % 2 === 1;
+          return (
+            <motion.section
+              key={season.id}
+              initial={{ opacity: 0, y: 28 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-80px" }}
+              transition={{ duration: 0.6, ease }}
+            >
+              <div className="overflow-hidden rounded-[1.75rem] border border-white/10 bg-white/[0.02]">
+                <div className="grid lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.4fr)]">
+                  {imageSrc && (
+                    <div className="relative min-h-[240px] border-b border-white/10 bg-black lg:min-h-[420px] lg:border-b-0 lg:border-r">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
+                        src={imageSrc}
+                        alt={`${season.title} — Team Manipal Racing Electric`}
+                        className="absolute inset-0 h-full w-full object-contain p-3 sm:p-5"
+                      />
+                      <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-black/20" />
+                      <p className="absolute bottom-5 left-5 text-xs font-semibold uppercase tracking-[0.28em] text-accent">
+                        {season.title}
+                      </p>
+                    </div>
+                  )}
 
-            return (
-              <motion.div
-                key={`${entry.year}-${entry.title}`}
-                initial={{ opacity: 0, y: 16 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-24px" }}
-                transition={{ duration: 0.45, delay: index * 0.025, ease }}
-                className="achievement-timeline-row group relative grid grid-cols-1 items-center gap-4 md:grid-cols-[minmax(0,1fr)_4rem_minmax(0,1fr)] md:gap-6"
-              >
-                <div className={`hidden min-w-0 md:flex ${cardOnLeft ? "justify-end" : ""}`}>
-                  {cardOnLeft ? <AchievementCard entry={entry} side="left" /> : null}
+                  <div className="p-5 sm:p-8 lg:p-10">
+                    <p className="text-xs font-semibold uppercase tracking-[0.35em] text-accent">
+                      Competition results
+                    </p>
+                    <h2 className="mt-3 text-3xl font-bold tracking-tight text-white sm:text-5xl">
+                      {season.title}
+                    </h2>
+                    <div className="mt-8 grid gap-3 sm:grid-cols-2">
+                      {season.results.map((result, index) => (
+                        <motion.article
+                          key={`${season.id}-${result.event}`}
+                          initial={{ opacity: 0, y: 12 }}
+                          whileInView={{ opacity: 1, y: 0 }}
+                          viewport={{ once: true }}
+                          transition={{ duration: 0.4, delay: index * 0.04, ease }}
+                          className={`rounded-2xl border px-4 py-4 sm:px-5 ${TIER_STYLES[result.tier]} ${
+                            result.event === "Overall Ranking" ? "sm:col-span-2" : ""
+                          }`}
+                        >
+                          <p className="font-mono text-2xl font-bold sm:text-3xl">{result.place}</p>
+                          <p className="mt-1 text-sm font-medium text-white/90">{result.event}</p>
+                          {"note" in result && result.note ? (
+                            <p className="mt-1 text-xs uppercase tracking-wider text-muted">
+                              {result.note}
+                            </p>
+                          ) : null}
+                        </motion.article>
+                      ))}
+                    </div>
+                  </div>
                 </div>
+              </div>
+            </motion.section>
+          );
+        })}
 
-                <div className="relative z-10 flex flex-row items-center gap-3 md:flex-col md:justify-center md:gap-2">
-                  <button
-                    type="button"
-                    aria-label={`${entry.year} — ${entry.title}`}
-                    className="achievement-timeline-node h-3 w-3 shrink-0 rounded-full md:h-3.5 md:w-3.5"
-                  />
-                  <span className="font-mono text-lg font-bold tracking-wide text-accent md:text-base">
-                    {entry.year}
-                  </span>
-                </div>
+        <section>
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.55, ease }}
+            className="max-w-3xl"
+          >
+            <p className="text-xs font-semibold uppercase tracking-[0.35em] text-accent">
+              Vehicle record
+            </p>
+            <h2 className="mt-3 text-3xl font-bold tracking-tight text-white sm:text-4xl">
+              Journey of Our EV
+            </h2>
+            <p className="mt-4 text-sm leading-relaxed text-muted sm:text-base">
+              Documented results for each vehicle generation. AIR is the All India Rank
+              published for that event.
+            </p>
+          </motion.div>
 
-                <div className={`hidden min-w-0 md:flex ${cardOnLeft ? "" : "justify-start"}`}>
-                  {!cardOnLeft ? <AchievementCard entry={entry} side="right" /> : null}
-                </div>
+          <div className="mt-10 space-y-5">
+            {EV_EVOLUTION.filter((vehicle) => !vehicle.upcoming).map((vehicle, index) => {
+              const image = evImages[vehicle.id as keyof EvPhotos];
 
-                <div className="md:hidden">
-                  <AchievementCard entry={entry} side="left" />
-                </div>
-              </motion.div>
-            );
-          })}
-        </div>
+              return (
+                <motion.article
+                  key={vehicle.id}
+                  initial={{ opacity: 0, y: 18 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, margin: "-40px" }}
+                  transition={{ duration: 0.45, delay: index * 0.03, ease }}
+                  className="grid overflow-hidden rounded-3xl border border-white/10 bg-white/[0.03] lg:grid-cols-[220px_minmax(0,1fr)]"
+                >
+                  <div className="flex items-center justify-center border-b border-white/10 bg-black/50 p-4 lg:border-b-0 lg:border-r">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={image}
+                      alt={vehicle.id}
+                      className="max-h-44 w-full object-contain lg:max-h-52"
+                    />
+                  </div>
+                  <div className="p-5 sm:p-6">
+                    <h3 className="font-mono text-2xl font-bold text-white">{vehicle.id}</h3>
+                    {vehicle.summary && (
+                      <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted">
+                        {vehicle.summary}
+                      </p>
+                    )}
+                    <ul className="mt-4 grid gap-2 sm:grid-cols-2">
+                      {vehicle.results.map((item) => {
+                        const tier = airTier(item.result);
+                        return (
+                          <li
+                            key={`${vehicle.id}-${item.event}`}
+                            className={`flex items-baseline justify-between gap-3 rounded-xl border px-3 py-2 text-sm ${TIER_STYLES[tier]}`}
+                          >
+                            <span className="text-white/85">{item.event}</span>
+                            <span className="shrink-0 font-mono text-xs font-bold tracking-wide">
+                              {item.result}
+                            </span>
+                          </li>
+                        );
+                      })}
+                    </ul>
+                  </div>
+                </motion.article>
+              );
+            })}
+          </div>
+        </section>
       </div>
-    </section>
-  );
-}
-
-function AchievementCard({ entry, side }: { entry: TimelineEntry; side: "left" | "right" }) {
-  return (
-    <article
-      className={`achievement-timeline-card liquid-glass w-full max-w-[420px] rounded-2xl p-6 sm:max-w-[440px] sm:p-7 ${
-        side === "left" ? "md:ml-auto md:mr-3" : "md:mr-auto md:ml-3"
-      }`}
-    >
-      <div className="flex items-start gap-4">
-        <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border border-orange/25 bg-orange/5">
-          <AchievementOutlineIcon type={entry.icon} className="h-6 w-6" />
-        </div>
-        <div className="min-w-0">
-          <p className="text-xs font-semibold uppercase tracking-[0.24em] text-accent/90">
-            {entry.year}
-          </p>
-          <h3 className="mt-2 text-lg font-bold leading-snug text-white sm:text-xl">
-            {highlightRanking(entry.title)}
-          </h3>
-          <p className="mt-3 text-sm leading-relaxed text-muted sm:text-base">{entry.detail}</p>
-        </div>
-      </div>
-    </article>
+    </div>
   );
 }

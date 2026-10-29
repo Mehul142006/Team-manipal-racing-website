@@ -186,11 +186,37 @@ export const SUBSYSTEMS = [
 
 export type SubsystemSlug = (typeof SUBSYSTEMS)[number]["slug"];
 
+/** Figures stated in the sponsorship brochure or already documented on the site. */
 export const TEAM_STATS = [
-  { label: "Vehicle Generations", value: 6, suffix: "+" },
+  { label: "Founded", value: 2021, suffix: "" },
+  { label: "Single-seater", value: 9, suffix: " kW" },
+  { label: "Vehicle Generations", value: 6, suffix: "" },
   { label: "Subsystems", value: 8, suffix: "" },
-  { label: "Years Competing", value: 5, suffix: "+" },
-  { label: "National Podiums", value: 7, suffix: "+" },
+] as const;
+
+export const ABOUT_CONTENT = {
+  motto: "Innovate. Initiate. Incarnate.",
+  lead:
+    "Team Manipal Racing Electric is the official E-BAJA SAE team of Manipal Academy of Higher Education.",
+  body:
+    "The team designs, builds, and tests all-terrain electric vehicles for national-level competitions. Founded in 2021 after five years of research and development, the work focuses on engineering and optimizing vehicle components and electrical systems.",
+  vehicle:
+    "That work includes a 9 kW single-seater, designed to rival the capabilities of its combustion-engine counterparts.",
+} as const;
+
+export const ABOUT_HIGHLIGHTS = [
+  {
+    title: "Official team",
+    text: "The official E-BAJA SAE team of Manipal Academy of Higher Education.",
+  },
+  {
+    title: "Engineering focus",
+    text: "Engineering and optimizing vehicle components and electrical systems.",
+  },
+  {
+    title: "Electric mobility",
+    text: "All-terrain electric vehicles for national-level competition, including a 9 kW single-seater.",
+  },
 ] as const;
 
 export const HOME_SHOWCASE_STATS = [
@@ -213,143 +239,146 @@ export const EBAJA_INFO = {
   learnMoreUrl: "https://www.bajasaeindia.org/",
 } as const;
 
+export type ResultTier = "gold" | "silver" | "bronze" | "listed";
+
+export type CompetitionResult = {
+  place: string;
+  event: string;
+  tier: ResultTier;
+  note?: string;
+};
+
+export const EBAJA_SEASONS = [
+  {
+    id: "2025",
+    title: "E-BAJA 2025",
+    results: [
+      { place: "1st", event: "Engineering Design Event", tier: "gold" },
+      { place: "1st", event: "Sled Pull", tier: "gold" },
+      { place: "2nd", event: "Maneuverability", tier: "silver" },
+      { place: "3rd", event: "Overall Dynamics", tier: "bronze" },
+      { place: "4th", event: "CAE Event", tier: "listed" },
+      { place: "4th", event: "Acceleration", tier: "listed" },
+      { place: "9th", event: "Overall Ranking", tier: "listed" },
+    ],
+  },
+  {
+    id: "2026",
+    title: "E-BAJA 2026",
+    results: [
+      { place: "3rd", event: "Engineering Design Event", tier: "bronze" },
+      { place: "7th", event: "Sled Pull", tier: "listed" },
+      { place: "13th", event: "Suspension and Traction", tier: "listed" },
+      { place: "5th", event: "Innovation", tier: "listed" },
+      { place: "4th", event: "CAE Event", tier: "listed" },
+      { place: "4th", event: "Acceleration", tier: "listed" },
+      {
+        place: "27th",
+        event: "Overall Ranking",
+        tier: "listed",
+        note: "out of 100+ teams",
+      },
+    ],
+  },
+] as const satisfies readonly {
+  id: string;
+  title: string;
+  results: readonly CompetitionResult[];
+}[];
+
+export type EvResult = {
+  result: string;
+  event: string;
+};
+
 export const EV_EVOLUTION = [
   {
     id: "EV1",
-    year: "2022",
-    image: "/photo/EV1.png",
-    achievements: ["First electric prototype completed", "Established the team's competition foundation"],
-    highlights: [
-      "Proof-of-concept platform built from the ground up",
-      "Core team workflows established at Techshila",
-      "First steps toward a championship E-BAJA program",
-    ],
-    improvements: [
-      { label: "Platform Development", progress: 100 },
-      { label: "Vehicle Reliability", progress: 55 },
-      { label: "Performance", progress: 45 },
-      { label: "Competition Readiness", progress: 30 },
+    upcoming: false,
+    summary: "Our first-ever EV debuted virtually during the pandemic.",
+    results: [
+      { result: "AIR 5", event: "Cost Event" },
+      { result: "AIR 4", event: "Hill Climb Event" },
+      { result: "AIR 9", event: "Sales Event" },
+      { result: "AIR 15", event: "Overall" },
     ],
   },
   {
     id: "EV2",
-    year: "2023",
-    image: "/photo/EV2.png",
-    achievements: ["Refined vehicle packaging", "Stronger integration across subsystems"],
-    highlights: [
-      "Improved build quality and workshop processes",
-      "Better reliability through structured testing",
-      "Evolution toward a competition-ready platform",
-    ],
-    improvements: [
-      { label: "Weight Optimization", progress: 68 },
-      { label: "Vehicle Reliability", progress: 70 },
-      { label: "Performance", progress: 58 },
-      { label: "Competition Readiness", progress: 48 },
+    upcoming: false,
+    summary: null,
+    results: [
+      { result: "AIR 5", event: "Overall" },
+      { result: "AIR 2", event: "Prelims Quiz" },
+      { result: "AIR 3", event: "Endurance Race" },
+      { result: "AIR 2", event: "Innovation Event" },
+      { result: "AIR 2", event: "Validation Event" },
+      { result: "AIR 5", event: "Acceleration Event" },
+      { result: "AIR 7", event: "CAE Event" },
     ],
   },
   {
     id: "EV3",
-    year: "2023",
-    image: "/photo/EV3.png",
-    achievements: ["First BAJA SAE India campaign", "National competition debut"],
-    highlights: [
-      "First full competition season completed",
-      "Integrated data-driven development approach",
-      "Proven performance on national stage",
-    ],
-    improvements: [
-      { label: "Weight Optimization", progress: 75 },
-      { label: "Vehicle Reliability", progress: 72 },
-      { label: "Performance", progress: 68 },
-      { label: "Competition Readiness", progress: 62 },
+    upcoming: false,
+    summary: null,
+    results: [
+      { result: "AIR 7", event: "Overall" },
+      { result: "AIR 4", event: "Design Event" },
+      { result: "AIR 5", event: "CAE Event" },
+      { result: "AIR 8", event: "Cost Event" },
+      { result: "AIR 4", event: "Suspension and Traction Event" },
+      { result: "AIR 8", event: "Maneuverability Event" },
+      { result: "AIR 8", event: "Endurance Race" },
     ],
   },
   {
     id: "EV4",
-    year: "2024",
-    image: "/photo/EV4.png",
-    achievements: ["Advanced vehicle dynamics focus", "Stronger competition preparation"],
-    highlights: [
-      "Improved handling",
-      "Better reliability",
-      "Stronger chassis design",
-    ],
-    improvements: [
-      { label: "Weight Optimization", progress: 82 },
-      { label: "Vehicle Reliability", progress: 78 },
-      { label: "Performance", progress: 75 },
-      { label: "Competition Readiness", progress: 72 },
+    upcoming: false,
+    summary: null,
+    results: [
+      { result: "AIR 7", event: "Overall" },
+      { result: "AIR 1", event: "Sled Pull Event" },
+      { result: "AIR 2", event: "Overall Dynamics" },
+      { result: "AIR 4", event: "Suspension and Traction Event" },
+      { result: "AIR 5", event: "Maneuverability Event" },
+      { result: "AIR 6", event: "CAE Event" },
+      { result: "AIR 8", event: "Endurance Race" },
     ],
   },
   {
     id: "EV5",
-    year: "2025",
-    image: "/photo/EV5.png",
-    achievements: [
-      "1st in Engineering Design",
-      "1st in Sled Pull",
-      "2nd in Maneuverability",
-      "9th Overall",
-    ],
-    highlights: [
-      "National podium performances",
-      "Engineering design excellence",
-      "Competition-proven platform",
-      "Top-10 overall finish",
-    ],
-    improvements: [
-      { label: "Weight Optimization", progress: 88 },
-      { label: "Vehicle Reliability", progress: 85 },
-      { label: "Performance", progress: 82 },
-      { label: "Competition Readiness", progress: 80 },
+    upcoming: false,
+    summary: null,
+    results: [
+      { result: "AIR 1", event: "Engineering Design Event" },
+      { result: "AIR 1", event: "Sled Pull" },
+      { result: "AIR 2", event: "Maneuverability" },
+      { result: "AIR 3", event: "Overall Dynamics" },
+      { result: "AIR 4", event: "CAE Event" },
+      { result: "AIR 4", event: "Acceleration" },
+      { result: "AIR 9", event: "Overall" },
     ],
   },
   {
     id: "EV6",
-    year: "2026",
-    image: "/photo/EV6.jpg",
-    achievements: [
-      "3rd in Engineering Design",
-      "7th in Sled Pull",
-      "13th in Suspension & Traction",
-      "5th in Innovation",
-      "4th in CAE Event",
-      "4th in Acceleration",
-      "27th Overall out of 100+ teams",
-    ],
-    highlights: [
-      "Competition Results",
-      "Engineering Excellence",
-      "Innovation Ranking",
-      "National Participation",
-      "Performance Development",
-    ],
-    improvements: [
-      { label: "Engineering Design", progress: 100 },
-      { label: "Innovation", progress: 80 },
-      { label: "Competition Readiness", progress: 90 },
-      { label: "Reliability", progress: 90 },
+    upcoming: false,
+    summary: null,
+    results: [
+      { result: "AIR 3", event: "Engineering Design Event" },
+      { result: "AIR 7", event: "Sled Pull" },
+      { result: "AIR 13", event: "Suspension and Traction" },
+      { result: "AIR 5", event: "Innovation" },
+      { result: "AIR 4", event: "CAE Event" },
+      { result: "AIR 4", event: "Acceleration" },
+      { result: "AIR 27", event: "Overall" },
     ],
   },
-] as const;
-
-export const ACHIEVEMENT_TIMELINE = [
-  { year: "2021", items: [{ title: "Team Founded", detail: "Official E-BAJA SAE team of MAHE established at MIT Manipal." }] },
-  { year: "2022", items: [{ title: "EV1 Prototype", detail: "First electric off-road platform completed and tested." }] },
-  { year: "2023", items: [{ title: "National Debut", detail: "First BAJA SAE India competition campaign." }, { title: "Engineering Systems", detail: "Structured testing and validation workflows established." }] },
-  { year: "2024", items: [{ title: "EV4 Platform", detail: "Advanced vehicle dynamics and engineering design focus." }] },
-  { year: "2025", items: [
-    { title: "1st Engineering Design", detail: "E-BAJA 2025 — National champion in engineering design." },
-    { title: "1st Sled Pull", detail: "Maximum pulling power on competition terrain." },
-    { title: "2nd Maneuverability", detail: "Precision handling through slalom courses." },
-    { title: "9th Overall", detail: "Top-10 overall finish at E-BAJA 2025." },
-  ]},
-  { year: "2026", items: [
-    { title: "3rd Engineering Design", detail: "Continued design excellence at E-BAJA 2026." },
-    { title: "5th Innovation", detail: "Recognized for novel engineering solutions." },
-    { title: "Top 30 Overall", detail: "Strong overall performance at E-BAJA 2026." },
-  ]},
+  {
+    id: "EV7",
+    upcoming: true,
+    summary: "Details coming soon.",
+    results: [],
+  },
 ] as const;
 
 export const SPONSORS = [
