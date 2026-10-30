@@ -1,7 +1,6 @@
 /**
  * Portrait paths keyed by the member name in SUBSYSTEM_TEAMS / LEADERSHIP.
  * The filename is the mapping source. Each file matches exactly one person.
- * Rajendra Sunki Reddy has no file in public/photos/team.
  */
 export const TEAM_MEMBER_PHOTOS: Record<string, string> = {
   "Akarsh P Poojary": "/photos/team/Akarsh.jpeg",
@@ -17,6 +16,8 @@ export const TEAM_MEMBER_PHOTOS: Record<string, string> = {
   "Anish K": "/photos/team/Anish.jpeg",
   "Thushar P K": "/photos/team/Thushar.jpeg",
   "Bijin Babu": "/photos/team/Bijin.jpeg",
+  "Rajendra Sunki Reddy": "/photos/team/Rajendra.jpeg",
+  "Karan Kumar": "/photos/team/Karan.jpeg",
 };
 
 export function getTeamMemberPhoto(name: string): string | undefined {

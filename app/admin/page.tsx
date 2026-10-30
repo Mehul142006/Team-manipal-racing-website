@@ -1,7 +1,12 @@
 import type { ReactNode } from "react";
 import Link from "next/link";
 import { ContactSubmissionList, RecruitmentApplicationList } from "@/components/admin/SubmissionRecords";
-import { listContactSubmissions, listRecruitmentApplications, requireAdminSession } from "@/lib/admin-data";
+import {
+  listContactSubmissions,
+  listRecruitmentApplications,
+  requireAdminSession,
+} from "@/lib/admin-data";
+import type { ContactView } from "@/lib/admin-records";
 
 export const dynamic = "force-dynamic";
 
@@ -12,7 +17,8 @@ export default async function AdminPage({
 }) {
   await requireAdminSession();
   const params = await searchParams;
-  const tab = params.tab === "recruitment" ? "recruitment" : "contact";
+  const tab: ContactView | "recruitment" =
+    params.tab === "starred" || params.tab === "trash" || params.tab === "recruitment" ? params.tab : "inbox";
 
   let loadError = false;
   let submissions: Awaited<ReturnType<typeof listContactSubmissions>> = [];
@@ -22,7 +28,7 @@ export default async function AdminPage({
     if (tab === "recruitment") {
       applications = await listRecruitmentApplications();
     } else {
-      submissions = await listContactSubmissions();
+      submissions = await listContactSubmissions(tab);
     }
   } catch {
     loadError = true;
@@ -38,7 +44,7 @@ export default async function AdminPage({
   } else if (tab === "recruitment") {
     content = <RecruitmentApplicationList applications={applications} />;
   } else {
-    content = <ContactSubmissionList submissions={submissions} />;
+    content = <ContactSubmissionList submissions={submissions} view={tab} />;
   }
 
   return (
@@ -47,10 +53,26 @@ export default async function AdminPage({
         <Link
           href="/admin"
           className={`rounded-xl px-4 py-2 text-xs font-semibold uppercase tracking-widest ${
-            tab === "contact" ? "bg-white text-midnight" : "border border-white/10 text-muted"
+            tab === "inbox" ? "bg-white text-midnight" : "border border-white/10 text-muted"
           }`}
         >
-          Contact Submissions
+          Inbox
+        </Link>
+        <Link
+          href="/admin?tab=starred"
+          className={`rounded-xl px-4 py-2 text-xs font-semibold uppercase tracking-widest ${
+            tab === "starred" ? "bg-white text-midnight" : "border border-white/10 text-muted"
+          }`}
+        >
+          Starred
+        </Link>
+        <Link
+          href="/admin?tab=trash"
+          className={`rounded-xl px-4 py-2 text-xs font-semibold uppercase tracking-widest ${
+            tab === "trash" ? "bg-white text-midnight" : "border border-white/10 text-muted"
+          }`}
+        >
+          Trash
         </Link>
         <Link
           href="/admin?tab=recruitment"

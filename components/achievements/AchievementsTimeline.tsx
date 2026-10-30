@@ -80,7 +80,7 @@ export function AchievementsTimeline({
                           whileInView={{ opacity: 1, y: 0 }}
                           viewport={{ once: true }}
                           transition={{ duration: 0.4, delay: index * 0.04, ease }}
-                          className={`rounded-2xl border px-4 py-4 sm:px-5 ${TIER_STYLES[result.tier]} ${
+                          className={`achievement-bubble rounded-2xl border px-4 py-4 sm:px-5 ${TIER_STYLES[result.tier]} ${
                             result.event === "Overall Ranking" ? "sm:col-span-2" : ""
                           }`}
                         >
@@ -155,7 +155,7 @@ export function AchievementsTimeline({
                         return (
                           <li
                             key={`${vehicle.id}-${item.event}`}
-                            className={`flex items-baseline justify-between gap-3 rounded-xl border px-3 py-2 text-sm ${TIER_STYLES[tier]}`}
+                            className={`achievement-bubble flex items-baseline justify-between gap-3 rounded-xl border px-3 py-2 text-sm ${TIER_STYLES[tier]}`}
                           >
                             <span className="text-white/85">{item.event}</span>
                             <span className="shrink-0 font-mono text-xs font-bold tracking-wide">

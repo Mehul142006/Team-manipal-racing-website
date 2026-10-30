@@ -549,7 +549,10 @@ export const SUBSYSTEM_TEAMS = [
   {
     id: "research-and-development",
     title: "Research and Development",
-    members: [{ name: "Anish K", role: "Subsystem Head" }],
+    members: [
+      { name: "Anish K", role: "Subsystem Head" },
+      { name: "Karan Kumar", role: "Member" },
+    ],
   },
   {
     id: "structures",

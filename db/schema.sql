@@ -7,8 +7,16 @@ create table if not exists contact_submissions (
   email text not null,
   subject text,
   message text not null,
+  is_starred boolean not null default false,
+  deleted_at timestamptz,
   created_at timestamptz not null default now()
 );
+
+alter table contact_submissions
+  add column if not exists is_starred boolean not null default false;
+
+alter table contact_submissions
+  add column if not exists deleted_at timestamptz;
 
 create index if not exists contact_submissions_created_at_idx
   on contact_submissions (created_at desc);

@@ -1,9 +1,15 @@
+export type ContactView = "inbox" | "starred" | "trash";
+
+export type SubmissionAction = "star" | "unstar" | "trash" | "restore" | "purge";
+
 export type ContactSubmission = {
   id: string;
   name: string;
   email: string;
   subject: string | null;
   message: string;
+  isStarred: boolean;
+  deletedAt: string | null;
   createdAt: string;
 };
 

@@ -939,6 +939,30 @@ textarea:disabled,
     0 0 28px rgba(255, 122, 24, 0.14);
 }
 
+.achievement-bubble {
+  transition:
+    box-shadow 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 0.35s ease;
+}
+
+@media (hover: hover) {
+  .achievement-bubble:hover,
+  .achievement-bubble:focus-within {
+    border-color: rgba(255, 176, 72, 0.55);
+    box-shadow:
+      0 0 0 1px rgba(255, 122, 24, 0.2),
+      0 0 28px rgba(255, 168, 48, 0.28);
+  }
+}
+
+@media (hover: none) {
+  .achievement-bubble {
+    box-shadow:
+      0 0 0 1px rgba(255, 122, 24, 0.12),
+      0 0 18px rgba(255, 168, 48, 0.16);
+  }
+}
+
 .recruitment-apply-btn:hover {
   transform: scale(1.03) translateY(-1px);
   box-shadow:

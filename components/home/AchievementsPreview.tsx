@@ -59,7 +59,7 @@ export function AchievementsPreview({ podiumImageSrc }: AchievementsPreviewProps
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: index * 0.06 }}
-                className="liquid-glass rounded-3xl p-5 sm:p-6"
+                className="achievement-bubble liquid-glass rounded-3xl p-5 sm:p-6"
               >
                 <h3 className="text-xl font-bold text-white sm:text-2xl">{season.title}</h3>
                 <ul className="mt-4 grid gap-2 sm:grid-cols-2">
